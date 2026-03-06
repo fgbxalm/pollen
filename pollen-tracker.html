@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pollen — Journal de symptômes</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f3;
+    --surface: #fff;
+    --border: #e8e2d5;
+    --text: #1a1714;
+    --muted: #8c8070;
+    --accent: #c8a84b;
+    --accent-light: #f5edd6;
+    --eyes: #5b8fa8;
+    --eyes-light: #e3f0f7;
+    --nose: #c97c5a;
+    --nose-light: #faeee7;
+    --asthma: #7a6fa0;
+    --asthma-light: #ede9f6;
+    --level0: #e8e2d5;
+    --level1: #f0c96e;
+    --level2: #e8935a;
+    --level3: #c94a4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px 80px;
+  }
+
+  header {
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .logo h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+
+  .date-today {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 480px;
+    margin: 0 auto 16px;
+  }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    margin-bottom: 16px;
+    font-style: italic;
+    color: var(--text);
+  }
+
+  /* Symptom rows */
+  .symptom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .symptom-row:last-child { margin-bottom: 0; }
+
+  .symptom-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    width: 90px;
+  }
+
+  .sym-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sym-eyes .sym-dot { background: var(--eyes); }
+  .sym-nose .sym-dot { background: var(--nose); }
+  .sym-asthma .sym-dot { background: var(--asthma); }
+
+  .level-selector {
+    display: flex;
+    gap: 6px;
+  }
+
+  .lvl-btn {
+    width: 52px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .lvl-btn:hover { border-color: var(--accent); }
+
+  .lvl-btn.active-0 { background: var(--level0); border-color: var(--level0); color: var(--text); }
+  .lvl-btn.active-1 { background: var(--level1); border-color: var(--level1); color: #5a3e00; }
+  .lvl-btn.active-2 { background: var(--level2); border-color: var(--level2); color: #fff; }
+  .lvl-btn.active-3 { background: var(--level3); border-color: var(--level3); color: #fff; }
+
+  .lvl-label { font-size: 9px; font-weight: 400; opacity: 0.8; }
+
+  /* Submit */
+  .submit-area {
+    max-width: 480px;
+    margin: 0 auto 16px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: opacity 0.15s;
+  }
+
+  .submit-btn:hover { opacity: 0.85; }
+  .submit-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .save-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    max-width: 480px;
+    margin: 0 auto 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab-btn.active {
+    background: var(--text);
+    color: #fff;
+  }
+
+  /* Period selector */
+  .period-selector {
+    display: flex;
+    gap: 6px;
+    max-width: 480px;
+    margin: 0 auto 12px;
+  }
+
+  .period-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .period-btn.active {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  /* History entries */
+  .history-entry {
+    max-width: 480px;
+    margin: 0 auto 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .entry-date {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 80px;
+  }
+
+  .entry-date .entry-sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    display: block;
+  }
+
+  .entry-badges {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    position: relative;
+  }
+
+  .badge-label {
+    font-size: 8px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1;
+    opacity: 0.75;
+    display: block;
+    margin-top: 1px;
+  }
+
+  .badge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .badge-wrap span.sym-name {
+    font-size: 9px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .badge.lv0 { background: var(--level0); color: var(--muted); }
+  .badge.lv1 { background: var(--level1); color: #5a3e00; }
+  .badge.lv2 { background: var(--level2); color: #fff; }
+  .badge.lv3 { background: var(--level3); color: #fff; }
+
+  /* Summary card */
+  .summary-row {
+    display: flex;
+    gap: 8px;
+    max-width: 480px;
+    margin: 0 auto 16px;
+  }
+
+  .summary-item {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .summary-item .s-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    display: block;
+  }
+
+  .summary-item .s-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 32px;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .empty-state .big { font-size: 32px; display: block; margin-bottom: 8px; }
+
+  /* filter type */
+  .type-filter {
+    display: flex;
+    gap: 6px;
+    max-width: 480px;
+    margin: 0 auto 12px;
+    flex-wrap: wrap;
+  }
+
+  .type-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .type-btn.active-all { background: var(--text); border-color: var(--text); color: #fff; }
+  .type-btn.active-eyes { background: var(--eyes-light); border-color: var(--eyes); color: var(--eyes); }
+  .type-btn.active-nose { background: var(--nose-light); border-color: var(--nose); color: var(--nose); }
+  .type-btn.active-asthma { background: var(--asthma-light); border-color: var(--asthma); color: var(--asthma); }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: transform 0.3s ease;
+    z-index: 100;
+    white-space: nowrap;
+  }
+
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    max-width: 480px;
+    margin: 0 auto 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px;
+  }
+
+  .nav-tab {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .nav-tab.active { background: var(--text); color: #fff; }
+
+  /* delete btn */
+  .del-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--level0);
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.15s;
+    line-height: 1;
+  }
+  .del-btn:hover { color: var(--level3); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <h1>🌿 Pollen</h1>
+    <span>Journal</span>
+  </div>
+  <div class="date-today" id="dateToday"></div>
+</header>
+
+<!-- NAV -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('saisie')">Saisir</button>
+  <button class="nav-tab" onclick="showSection('historique')">Historique</button>
+</div>
+
+<!-- SECTION SAISIE -->
+<div id="section-saisie">
+  <div class="card">
+    <div class="card-title">Aujourd'hui</div>
+
+    <div class="symptom-row sym-eyes">
+      <div class="symptom-label"><span class="sym-dot"></span>Yeux</div>
+      <div class="level-selector" id="sel-eyes">
+        <button class="lvl-btn active-0" onclick="setLevel('eyes',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setLevel('eyes',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setLevel('eyes',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setLevel('eyes',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
+    </div>
+
+    <div class="symptom-row sym-nose">
+      <div class="symptom-label"><span class="sym-dot"></span>Nez</div>
+      <div class="level-selector" id="sel-nose">
+        <button class="lvl-btn active-0" onclick="setLevel('nose',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setLevel('nose',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setLevel('nose',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setLevel('nose',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
+    </div>
+
+    <div class="symptom-row sym-asthma">
+      <div class="symptom-label"><span class="sym-dot"></span>Asthme</div>
+      <div class="level-selector" id="sel-asthma">
+        <button class="lvl-btn active-0" onclick="setLevel('asthma',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setLevel('asthma',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setLevel('asthma',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setLevel('asthma',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-area">
+    <button class="submit-btn" id="submitBtn" onclick="saveToday()">Enregistrer la journée</button>
+    <div class="save-note" id="saveNote">Valide à 23h59 — modifiable jusqu'à minuit</div>
+  </div>
+</div>
+
+<!-- SECTION HISTORIQUE -->
+<div id="section-historique" style="display:none">
+
+  <div class="period-selector">
+    <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jours</button>
+    <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
+    <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Années</button>
+  </div>
+
+  <div class="type-filter">
+    <button class="type-btn active-all" onclick="setFilter('all')" id="fAll">Tout</button>
+    <button class="type-btn" onclick="setFilter('eyes')" id="fEyes">👁 Yeux</button>
+    <button class="type-btn" onclick="setFilter('nose')" id="fNose">👃 Nez</button>
+    <button class="type-btn" onclick="setFilter('asthma')" id="fAsthma">🫁 Asthme</button>
+  </div>
+
+  <div class="summary-row" id="summaryRow"></div>
+  <div id="histList"></div>
+</div>
+
+<div id="toast">✓ Enregistré</div>
+
+<script>
+  const STORAGE_KEY = 'pollen_entries';
+  const WEBHOOK_WRITE = 'https://hook.eu1.make.com/14s36yid33sa71w39ay8nn98mfg3peoy';
+  let levels = { eyes: 0, nose: 0, asthma: 0 };
+  let currentPeriod = 'jour';
+  let currentFilter = 'all';
+
+  function getData() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function todayKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function setLevel(sym, val) {
+    levels[sym] = val;
+    const sel = document.getElementById('sel-' + sym);
+    sel.querySelectorAll('.lvl-btn').forEach(btn => {
+      btn.className = 'lvl-btn';
+      if (parseInt(btn.dataset.val) === val) btn.className = 'lvl-btn active-' + val;
+    });
+  }
+
+  async function saveToday() {
+    const key = todayKey();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Envoi…';
+
+    // Sauvegarde locale
+    const data = getData();
+    data[key] = { eyes: levels.eyes, nose: levels.nose, asthma: levels.asthma, ts: Date.now() };
+    saveData(data);
+
+    // Envoi vers Google Sheets via Make
+    try {
+      await fetch(WEBHOOK_WRITE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: key, yeux: levels.eyes, nez: levels.nose, asthme: levels.asthma })
+      });
+      showToast('✓ Enregistré dans Google Sheets');
+    } catch(e) {
+      showToast('⚠️ Sauvegardé en local seulement');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Enregistrer la journée';
+    document.getElementById('saveNote').textContent = 'Modifié aujourd\'hui à ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function showSection(s) {
+    document.getElementById('section-saisie').style.display = s === 'saisie' ? '' : 'none';
+    document.getElementById('section-historique').style.display = s === 'historique' ? '' : 'none';
+    document.querySelectorAll('.nav-tab').forEach((el, i) => {
+      el.classList.toggle('active', (i === 0 && s === 'saisie') || (i === 1 && s === 'historique'));
+    });
+    if (s === 'historique') renderHistory();
+  }
+
+  function setPeriod(p) {
+    currentPeriod = p;
+    ['Jour','Mois','Annee'].forEach(x => document.getElementById('pb'+x).classList.remove('active'));
+    document.getElementById('pb' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
+    renderHistory();
+  }
+
+  function setFilter(f) {
+    currentFilter = f;
+    ['All','Eyes','Nose','Asthma'].forEach(x => {
+      const el = document.getElementById('f' + x);
+      el.className = 'type-btn';
+    });
+    document.getElementById('f' + f.charAt(0).toUpperCase() + f.slice(1)).className = 'type-btn active-' + f;
+    renderHistory();
+  }
+
+  function deleteEntry(key) {
+    const data = getData();
+    delete data[key];
+    saveData(data);
+    renderHistory();
+    showToast('🗑 Entrée supprimée');
+  }
+
+  function badgeClass(v) { return 'badge lv' + v; }
+
+  function levelLabel(v) { return ['—','1','2','3'][v]; }
+
+  function renderHistory() {
+    const data = getData();
+    const keys = Object.keys(data).sort().reverse();
+
+    // Group
+    let groups = {};
+    keys.forEach(k => {
+      const entry = data[k];
+      let gKey, gLabel;
+      const parts = k.split('-');
+
+      if (currentPeriod === 'jour') {
+        gKey = k;
+        const d = new Date(k + 'T12:00:00');
+        gLabel = d.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'long'});
+        gLabel = gLabel.charAt(0).toUpperCase() + gLabel.slice(1);
+      } else if (currentPeriod === 'mois') {
+        gKey = parts[0] + '-' + parts[1];
+        const d = new Date(k + 'T12:00:00');
+        gLabel = d.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+        gLabel = gLabel.charAt(0).toUpperCase() + gLabel.slice(1);
+      } else {
+        gKey = parts[0];
+        gLabel = parts[0];
+      }
+
+      if (!groups[gKey]) groups[gKey] = { label: gLabel, entries: [], key: gKey };
+      groups[gKey].entries.push({ ...entry, dateKey: k });
+    });
+
+    const groupList = Object.values(groups).sort((a,b) => b.key.localeCompare(a.key));
+
+    // Summary
+    let totalDays = keys.length;
+    let maxDay = 0, sumAll = 0;
+    keys.forEach(k => {
+      const e = data[k];
+      let s = (currentFilter === 'all') ? (e.eyes + e.nose + e.asthma) / 3 :
+               (currentFilter === 'eyes') ? e.eyes :
+               (currentFilter === 'nose') ? e.nose : e.asthma;
+      sumAll += s;
+      if (s > maxDay) maxDay = s;
+    });
+
+    const avg = totalDays ? (sumAll / totalDays).toFixed(1) : '—';
+    const symLabel = currentFilter === 'all' ? 'Global' : currentFilter === 'eyes' ? 'Yeux' : currentFilter === 'nose' ? 'Nez' : 'Asthme';
+
+    document.getElementById('summaryRow').innerHTML = `
+      <div class="summary-item"><span class="s-val">${totalDays}</span><span class="s-label">Jours enregistrés</span></div>
+      <div class="summary-item"><span class="s-val">${avg}</span><span class="s-label">Moy. ${symLabel}</span></div>
+      <div class="summary-item"><span class="s-val">${maxDay}</span><span class="s-label">Max ${symLabel}</span></div>
+    `;
+
+    const histList = document.getElementById('histList');
+    if (groupList.length === 0) {
+      histList.innerHTML = '<div class="empty-state"><span class="big">🌱</span>Aucune donnée encore.<br>Commence par enregistrer aujourd\'hui !</div>';
+      return;
+    }
+
+    histList.innerHTML = '';
+    groupList.forEach(group => {
+      if (currentPeriod === 'jour') {
+        // One entry per day
+        const e = group.entries[0];
+        const show = currentFilter === 'all' || e[currentFilter] > 0;
+
+        if (currentFilter !== 'all' && e[currentFilter] === 0) return;
+
+        const isToday = group.key === todayKey();
+        const el = document.createElement('div');
+        el.className = 'history-entry';
+        el.innerHTML = `
+          <div class="entry-date">${group.label}${isToday ? '<span class="entry-sub">Aujourd\'hui</span>' : ''}</div>
+          <div class="entry-badges">
+            ${currentFilter === 'all' || currentFilter === 'eyes' ? `<div class="badge-wrap"><div class="${badgeClass(e.eyes)}">${e.eyes}</div><span class="sym-name">Yeux</span></div>` : ''}
+            ${currentFilter === 'all' || currentFilter === 'nose' ? `<div class="badge-wrap"><div class="${badgeClass(e.nose)}">${e.nose}</div><span class="sym-name">Nez</span></div>` : ''}
+            ${currentFilter === 'all' || currentFilter === 'asthma' ? `<div class="badge-wrap"><div class="${badgeClass(e.asthma)}">${e.asthma}</div><span class="sym-name">Asthme</span></div>` : ''}
+          </div>
+          <button class="del-btn" onclick="deleteEntry('${e.dateKey}')" title="Supprimer">×</button>
+        `;
+        histList.appendChild(el);
+      } else {
+        // Aggregated: avg per group
+        const count = group.entries.length;
+        const avgE = +(group.entries.reduce((s,e)=>s+e.eyes,0)/count).toFixed(1);
+        const avgN = +(group.entries.reduce((s,e)=>s+e.nose,0)/count).toFixed(1);
+        const avgA = +(group.entries.reduce((s,e)=>s+e.asthma,0)/count).toFixed(1);
+
+        const roundE = Math.round(avgE), roundN = Math.round(avgN), roundA = Math.round(avgA);
+
+        if (currentFilter !== 'all') {
+          const val = currentFilter === 'eyes' ? avgE : currentFilter === 'nose' ? avgN : avgA;
+          if (val === 0) return;
+        }
+
+        const el = document.createElement('div');
+        el.className = 'history-entry';
+        el.innerHTML = `
+          <div class="entry-date">${group.label}<span class="entry-sub">${count} jour${count>1?'s':''}</span></div>
+          <div class="entry-badges">
+            ${currentFilter === 'all' || currentFilter === 'eyes' ? `<div class="badge-wrap"><div class="${badgeClass(roundE)}">${avgE}</div><span class="sym-name">Yeux</span></div>` : ''}
+            ${currentFilter === 'all' || currentFilter === 'nose' ? `<div class="badge-wrap"><div class="${badgeClass(roundN)}">${avgN}</div><span class="sym-name">Nez</span></div>` : ''}
+            ${currentFilter === 'all' || currentFilter === 'asthma' ? `<div class="badge-wrap"><div class="${badgeClass(roundA)}">${avgA}</div><span class="sym-name">Asthme</span></div>` : ''}
+          </div>
+        `;
+        histList.appendChild(el);
+      }
+    });
+  }
+
+  // Init
+  const today = new Date();
+  document.getElementById('dateToday').textContent = today.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('dateToday').style.textTransform = 'capitalize';
+
+  // Load today if exists
+  const existing = getData()[todayKey()];
+  if (existing) {
+    setLevel('eyes', existing.eyes);
+    setLevel('nose', existing.nose);
+    setLevel('asthma', existing.asthma);
+    const d = new Date(existing.ts);
+    document.getElementById('saveNote').textContent = 'Déjà enregistré aujourd\'hui à ' + d.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+  }
+</script>
+</body>
+</html>
