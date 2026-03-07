@@ -545,7 +545,7 @@
 
   function todayKey() {
     const d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
   }
 
   function setLevel(sym, val) {
@@ -639,21 +639,22 @@
     keys.forEach(k => {
       const entry = data[k];
       let gKey, gLabel;
-      const parts = k.split('-');
+      const parts = k.split('/'); // DD/MM/YYYY
+      const day = parts[0], month = parts[1], year = parts[2];
 
       if (currentPeriod === 'jour') {
         gKey = k;
-        const d = new Date(k + 'T12:00:00');
+        const d = new Date(year + '-' + month + '-' + day + 'T12:00:00');
         gLabel = d.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'long'});
         gLabel = gLabel.charAt(0).toUpperCase() + gLabel.slice(1);
       } else if (currentPeriod === 'mois') {
-        gKey = parts[0] + '-' + parts[1];
-        const d = new Date(k + 'T12:00:00');
+        gKey = year + '-' + month;
+        const d = new Date(year + '-' + month + '-' + day + 'T12:00:00');
         gLabel = d.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
         gLabel = gLabel.charAt(0).toUpperCase() + gLabel.slice(1);
       } else {
-        gKey = parts[0];
-        gLabel = parts[0];
+        gKey = year;
+        gLabel = year;
       }
 
       if (!groups[gKey]) groups[gKey] = { label: gLabel, entries: [], key: gKey };
