@@ -500,8 +500,7 @@
   </div>
 
   <div class="submit-area">
-    <button class="submit-btn" id="submitBtn" onclick="saveToday()">Enregistrer la journée</button>
-    <div class="save-note" id="saveNote">Valide à 23h59 — modifiable jusqu'à minuit</div>
+    <div class="save-note" id="saveNote">Les niveaux sont enregistrés automatiquement</div>
   </div>
 </div>
 
@@ -555,34 +554,24 @@
       btn.className = 'lvl-btn';
       if (parseInt(btn.dataset.val) === val) btn.className = 'lvl-btn active-' + val;
     });
+    saveToday();
   }
 
   async function saveToday() {
     const key = todayKey();
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.textContent = 'Envoi…';
-
-    // Sauvegarde locale
     const data = getData();
     data[key] = { eyes: levels.eyes, nose: levels.nose, asthma: levels.asthma, ts: Date.now() };
     saveData(data);
-
-    // Envoi vers Google Sheets via Make
     try {
       await fetch(WEBHOOK_WRITE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ date: key, yeux: levels.eyes, nez: levels.nose, asthme: levels.asthma })
       });
-      showToast('✓ Enregistré dans Google Sheets');
+      document.getElementById('saveNote').textContent = 'Enregistré à ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
     } catch(e) {
-      showToast('⚠️ Sauvegardé en local seulement');
+      document.getElementById('saveNote').textContent = 'Sauvegarde locale seulement';
     }
-
-    btn.disabled = false;
-    btn.textContent = 'Enregistrer la journée';
-    document.getElementById('saveNote').textContent = 'Modifié aujourd\'hui à ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
   }
 
   function showToast(msg) {
