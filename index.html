@@ -1218,11 +1218,10 @@
 
   async function fetchPollen() {
     try {
-      // Pour prod (GitHub Pages), décommenter les 3 lignes suivantes et supprimer MOCK_HOURLY :
-      // var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.97&longitude=6.08&hourly=alder_pollen,birch_pollen,oak_pollen,ash_pollen,hornbeam_pollen,cypress_pollen,hazel_pollen,olive_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,plantain_pollen&timezone=Europe%2FParis&forecast_days=1';
-      // var res = await fetch(url); var json = await res.json();
-      // processPollen(json.hourly);
-      processPollen(MOCK_HOURLY);
+      var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.97&longitude=6.08&hourly=alder_pollen,birch_pollen,oak_pollen,ash_pollen,hornbeam_pollen,cypress_pollen,hazel_pollen,olive_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,plantain_pollen&timezone=Europe%2FParis&forecast_days=1';
+      var res = await fetch(url);
+      var json = await res.json();
+      processPollen(json.hourly);
     } catch(e) {
       document.getElementById('pollenSub').textContent = 'Données non disponibles';
       document.getElementById('pollenPills').innerHTML = '<span style="font-size:11px;color:var(--muted);font-style:italic;">Impossible de charger les données pollen.</span>';
@@ -1301,27 +1300,6 @@
     renderHistory();
     showToast('🗑 Supprimé');
   }
-
-  // Faux historique pour test — à supprimer en prod
-  (function() {
-    var data = getData();
-    var today = new Date();
-    for (var i = 1; i <= 30; i++) {
-      var d = new Date(today);
-      d.setDate(today.getDate() - i);
-      var key = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
-      if (!data[key]) {
-        data[key] = {
-          eyes:     Math.floor(Math.random() * 4),
-          nose:     Math.floor(Math.random() * 4),
-          asthma:   Math.floor(Math.random() * 4),
-          ventoline: Math.floor(Math.random() * 3),
-          ts: d.getTime()
-        };
-      }
-    }
-    saveData(data);
-  })();
 
   const existing = getData()[todayKey()];
   if (existing) {
