@@ -595,6 +595,21 @@
     color: var(--text);
   }
 
+  .city-result-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+  }
+
   /* TOAST */
   #toast {
     position: fixed;
@@ -696,10 +711,18 @@
 
 <!-- SECTION POLLEN DETAIL -->
 <div id="section-pollen" style="display:none">
-  <div style="max-width:480px;margin:0 auto 16px;display:flex;align-items:center;gap:10px;">
+  <div style="max-width:480px;margin:0 auto 12px;display:flex;align-items:center;gap:10px;">
     <button onclick="showSection('saisie')" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;color:var(--muted);">←</button>
-    <span style="font-family:'DM Serif Display',serif;font-size:18px;font-style:italic;">Pollen · Beaumont</span>
+    <span id="pollenDetailTitle" style="font-family:'DM Serif Display',serif;font-size:18px;font-style:italic;">Pollen · Beaumont</span>
   </div>
+  <div style="max-width:480px;margin:0 auto 14px;display:flex;gap:8px;">
+    <input id="cityInput" type="text" placeholder="Changer de ville…"
+      style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);color:var(--text);outline:none;"
+      onkeydown="if(event.key==='Enter') searchCity()" />
+    <button onclick="searchCity()"
+      style="padding:8px 14px;border-radius:20px;border:none;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">OK</button>
+  </div>
+  <div id="cityResults" style="max-width:480px;margin:0 auto 10px;display:none;"></div>
   <div id="pollenDetail"></div>
 </div>
 
@@ -1211,14 +1234,55 @@
     });
     document.getElementById('pollenPills').innerHTML = html;
     var now = new Date();
-      var hh = String(now.getHours()).padStart(2,'0');
-      var mm = String(now.getMinutes()).padStart(2,'0');
-      document.getElementById('pollenSub').textContent = 'Beaumont · ' + hh + ':' + mm;
+    var hh = String(now.getHours()).padStart(2,'0');
+    var mm = String(now.getMinutes()).padStart(2,'0');
+    var cityName = localStorage.getItem('pollen_city_name') || 'Beaumont';
+    document.getElementById('pollenSub').textContent = cityName + ' · ' + hh + ':' + mm;
+    var titleEl = document.getElementById('pollenDetailTitle');
+    if (titleEl) titleEl.textContent = 'Pollen · ' + cityName;
+  }
+
+  async function searchCity() {
+    var q = document.getElementById('cityInput').value.trim();
+    if (!q) return;
+    var resultsEl = document.getElementById('cityResults');
+    resultsEl.style.display = '';
+    resultsEl.innerHTML = '<span style="font-size:12px;color:var(--muted);">Recherche…</span>';
+    try {
+      var res = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(q) + '&count=5&language=fr&format=json');
+      var json = await res.json();
+      if (!json.results || json.results.length === 0) {
+        resultsEl.innerHTML = '<span style="font-size:12px;color:var(--muted);font-style:italic;">Aucun résultat.</span>';
+        return;
+      }
+      resultsEl.innerHTML = '';
+      json.results.forEach(function(r) {
+        var label = r.name + (r.admin1 ? ', ' + r.admin1 : '') + (r.country_code !== 'FR' ? ' (' + r.country_code + ')' : '');
+        var btn = document.createElement('button');
+        btn.textContent = label;
+        btn.className = 'city-result-btn';
+        btn.addEventListener('click', function() { selectCity(r.name, r.latitude, r.longitude); });
+        resultsEl.appendChild(btn);
+      });
+    } catch(e) {
+      resultsEl.innerHTML = '<span style="font-size:12px;color:var(--muted);font-style:italic;">Erreur de recherche.</span>';
+    }
+  }
+
+  function selectCity(name, lat, lon) {
+    localStorage.setItem('pollen_city_name', name);
+    localStorage.setItem('pollen_lat', lat);
+    localStorage.setItem('pollen_lon', lon);
+    document.getElementById('cityResults').style.display = 'none';
+    document.getElementById('cityInput').value = '';
+    fetchPollen();
   }
 
   async function fetchPollen() {
     try {
-      var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.97&longitude=6.08&hourly=alder_pollen,birch_pollen,oak_pollen,ash_pollen,hornbeam_pollen,cypress_pollen,hazel_pollen,olive_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,plantain_pollen&timezone=Europe%2FParis&forecast_days=1';
+      var lat = localStorage.getItem('pollen_lat') || '45.97';
+      var lon = localStorage.getItem('pollen_lon') || '6.08';
+      var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + lat + '&longitude=' + lon + '&hourly=alder_pollen,birch_pollen,oak_pollen,ash_pollen,hornbeam_pollen,cypress_pollen,hazel_pollen,olive_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,plantain_pollen&timezone=Europe%2FParis&forecast_days=1';
       var res = await fetch(url);
       var json = await res.json();
       processPollen(json.hourly);
