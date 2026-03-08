@@ -1175,14 +1175,9 @@
     {
       label: 'Arbres',
       types: [
-        { key: 'alder_pollen',    label: 'Aulne' },
-        { key: 'birch_pollen',    label: 'Bouleau' },
-        { key: 'oak_pollen',      label: 'Chêne' },
-        { key: 'ash_pollen',      label: 'Frêne' },
-        { key: 'hornbeam_pollen', label: 'Charme' },
-        { key: 'cypress_pollen',  label: 'Cyprès' },
-        { key: 'hazel_pollen',    label: 'Noisetier' },
-        { key: 'olive_pollen',    label: 'Olivier' }
+        { key: 'alder_pollen', label: 'Aulne' },
+        { key: 'birch_pollen', label: 'Bouleau' },
+        { key: 'olive_pollen', label: 'Olivier' }
       ]
     },
     {
@@ -1194,27 +1189,20 @@
     {
       label: 'Plantes',
       types: [
-        { key: 'mugwort_pollen',  label: 'Armoise' },
-        { key: 'ragweed_pollen',  label: 'Ambroisie' },
-        { key: 'plantain_pollen', label: 'Plantain' }
+        { key: 'mugwort_pollen', label: 'Armoise' },
+        { key: 'ragweed_pollen', label: 'Ambroisie' }
       ]
     }
   ];
 
   // Mock data pour test local — remplacer par fetch API sur GitHub
   var MOCK_HOURLY = {
-    alder_pollen:    [0,0,0,0,0,0,5,8,12,15,18,20,18,15,12,10,8,5,3,2,1,0,0,0],
-    birch_pollen:    [0,0,0,0,0,0,10,25,45,60,75,80,72,65,55,45,35,25,15,10,5,2,0,0],
-    oak_pollen:      [0,0,0,0,0,0,8,15,30,50,65,70,60,50,40,30,20,12,6,3,1,0,0,0],
-    ash_pollen:      [0,0,0,0,0,0,2,4,6,8,10,10,8,6,5,4,3,2,1,0,0,0,0,0],
-    hornbeam_pollen: [0,0,0,0,0,0,1,2,3,4,5,5,4,4,3,2,1,1,0,0,0,0,0,0],
-    cypress_pollen:  [0,0,0,0,0,0,0,1,2,2,3,3,2,2,1,1,0,0,0,0,0,0,0,0],
-    hazel_pollen:    [0,0,0,0,0,0,3,6,10,14,18,20,18,14,10,8,5,3,1,0,0,0,0,0],
-    olive_pollen:    [0,0,0,0,0,0,0,0,1,2,3,3,2,2,1,1,0,0,0,0,0,0,0,0],
-    grass_pollen:    [0,0,0,0,0,0,2,5,8,10,12,15,14,12,10,8,6,4,2,1,0,0,0,0],
-    mugwort_pollen:  [0,0,0,0,0,0,0,2,3,4,5,5,4,3,3,2,2,1,0,0,0,0,0,0],
-    ragweed_pollen:  [0,0,0,0,0,0,0,0,1,2,4,5,5,4,3,2,1,0,0,0,0,0,0,0],
-    plantain_pollen: [0,0,0,0,0,0,1,2,4,6,8,9,8,6,5,4,3,2,1,0,0,0,0,0]
+    alder_pollen:   [0,0,0,0,0,0,5,8,12,15,18,20,18,15,12,10,8,5,3,2,1,0,0,0],
+    birch_pollen:   [0,0,0,0,0,0,10,25,45,60,75,80,72,65,55,45,35,25,15,10,5,2,0,0],
+    grass_pollen:   [0,0,0,0,0,0,2,5,8,10,12,15,14,12,10,8,6,4,2,1,0,0,0,0],
+    mugwort_pollen: [0,0,0,0,0,0,0,2,3,4,5,5,4,3,3,2,2,1,0,0,0,0,0,0],
+    olive_pollen:   [0,0,0,0,0,0,0,0,1,2,3,3,2,2,1,1,0,0,0,0,0,0,0,0],
+    ragweed_pollen: [0,0,0,0,0,0,0,0,1,2,4,5,5,4,3,2,1,0,0,0,0,0,0,0]
   };
 
   function processPollen(hourly) {
@@ -1282,11 +1270,12 @@
     try {
       var lat = localStorage.getItem('pollen_lat') || '45.97';
       var lon = localStorage.getItem('pollen_lon') || '6.08';
-      var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + lat + '&longitude=' + lon + '&hourly=alder_pollen,birch_pollen,oak_pollen,ash_pollen,hornbeam_pollen,cypress_pollen,hazel_pollen,olive_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,plantain_pollen&timezone=Europe%2FParis&forecast_days=1';
+      var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + lat + '&longitude=' + lon + '&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen&timezone=Europe%2FParis&forecast_days=1';
       var res = await fetch(url);
       var json = await res.json();
       processPollen(json.hourly);
     } catch(e) {
+      console.error('Pollen fetch error:', e);
       document.getElementById('pollenSub').textContent = 'Données non disponibles';
       document.getElementById('pollenPills').innerHTML = '<span style="font-size:11px;color:var(--muted);font-style:italic;">Impossible de charger les données pollen.</span>';
     }
