@@ -34,13 +34,31 @@
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100vh;
-    padding: 24px 16px calc(var(--nav-h) + 24px);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #main-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 12px 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #section-saisie {
+    overflow: hidden;
+  }
+
+  #section-historique {
+    /* scrolls inside main-scroll */
   }
 
   header {
     max-width: 480px;
-    margin: 0 auto 28px;
+    margin: 0 auto 8px;
+    flex-shrink: 0;
   }
 
   .logo {
@@ -51,7 +69,7 @@
   }
 
   .logo h1 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
     font-size: 28px;
     letter-spacing: -0.5px;
   }
@@ -68,7 +86,7 @@
   }
 
   .date-today {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
     font-size: 18px;
     font-style: italic;
     color: var(--text);
@@ -119,27 +137,27 @@
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 14px;
+    padding: 10px 12px;
     max-width: 480px;
-    margin: 0 auto 12px;
+    margin: 0 auto 8px;
   }
 
   .card-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
   .card-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 15px;
     flex-shrink: 0;
   }
 
@@ -148,8 +166,8 @@
   .card-asthma .card-icon { background: var(--asthma-light); }
 
   .card-label {
-    font-family: 'DM Serif Display', serif;
-    font-size: 17px;
+    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
+    font-size: 15px;
     font-style: italic;
   }
 
@@ -162,7 +180,7 @@
 
   .lvl-btn {
     flex: 1;
-    height: 48px;
+    height: 42px;
     border-radius: 10px;
     border: 1.5px solid var(--border);
     background: var(--bg);
@@ -192,8 +210,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 18px;
-    padding-top: 16px;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 1px solid var(--border);
   }
 
@@ -210,13 +228,13 @@
   }
 
   .vent-btn {
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1.5px solid var(--border);
     background: var(--bg);
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 300;
     color: var(--text);
     display: flex;
@@ -229,9 +247,9 @@
   .vent-btn:hover { border-color: var(--asthma); color: var(--asthma); }
 
   .vent-count {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    min-width: 28px;
+    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
+    font-size: 18px;
+    min-width: 22px;
     text-align: center;
   }
 
@@ -243,13 +261,11 @@
   /* HISTORIQUE */
   .period-selector {
     display: flex;
-    gap: 6px;
-    max-width: 480px;
-    margin: 0 auto 12px;
+    gap: 5px;
   }
 
   .period-btn {
-    padding: 6px 16px;
+    padding: 6px 11px;
     border-radius: 20px;
     border: 1.5px solid var(--border);
     background: transparent;
@@ -259,6 +275,7 @@
     color: var(--muted);
     cursor: pointer;
     transition: all 0.15s;
+    white-space: nowrap;
   }
 
   .period-btn.active {
@@ -267,31 +284,32 @@
     color: var(--text);
   }
 
-  .type-filter {
+  .hist-controls {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
     max-width: 480px;
-    margin: 0 auto 16px;
-    flex-wrap: wrap;
+    margin: 0 auto 12px;
+    gap: 8px;
   }
 
-  .type-btn {
-    padding: 5px 12px;
-    border-radius: 20px;
-    border: 1.5px solid var(--border);
-    background: transparent;
+  .hist-select {
     font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
-    color: var(--muted);
+    color: var(--text);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px;
     cursor: pointer;
-    transition: all 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c8070'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
   }
-
-  .type-btn.active-all { background: var(--text); border-color: var(--text); color: #fff; }
-  .type-btn.active-eyes { background: var(--eyes-light); border-color: var(--eyes); color: var(--eyes); }
-  .type-btn.active-nose { background: var(--nose-light); border-color: var(--nose); color: var(--nose); }
-  .type-btn.active-asthma { background: var(--asthma-light); border-color: var(--asthma); color: var(--asthma); }
 
   /* CHART */
   .chart-card {
@@ -305,7 +323,7 @@
 
   .chart-card canvas {
     width: 100% !important;
-    max-height: 200px;
+    max-height: 280px;
   }
 
   /* SUMMARY */
@@ -323,10 +341,24 @@
     border-radius: 14px;
     padding: 12px;
     text-align: center;
+    transition: background 0.2s;
   }
 
+  .summary-item.sum-lv0 { background: var(--level0); border-color: var(--level0); }
+  .summary-item.sum-lv1 { background: var(--level1); border-color: var(--level1); }
+  .summary-item.sum-lv2 { background: var(--level2); border-color: var(--level2); }
+  .summary-item.sum-lv3 { background: var(--level3); border-color: var(--level3); }
+
+  .summary-item.sum-lv2 .s-val,
+  .summary-item.sum-lv2 .s-label,
+  .summary-item.sum-lv3 .s-val,
+  .summary-item.sum-lv3 .s-label { color: #fff; }
+
+  .summary-item.sum-lv1 .s-val,
+  .summary-item.sum-lv1 .s-label { color: #5a3e00; }
+
   .summary-item .s-val {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
     font-size: 24px;
     display: block;
   }
@@ -429,12 +461,146 @@
   }
   .empty-state .big { font-size: 32px; display: block; margin-bottom: 8px; }
 
+
+
+  /* GRID LAYOUT */
+  .grid-row {
+    display: flex;
+    gap: 6px;
+    max-width: 480px;
+    margin: 0 auto 6px;
+  }
+
+  .grid-row .card {
+    flex: 1;
+    margin: 0;
+    min-width: 0;
+  }
+
+  .level-selector-col {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .level-selector-col .lvl-btn {
+    width: 100%;
+    height: 30px;
+    flex: none;
+    font-size: 11px;
+  }
+
+  .card-icon-pollen { background: #f0f4e0; }
+
+  /* POLLEN BANNER */
+
+  .pollen-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .pollen-pill {
+    display: block;
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .pollen-pill.p0 { background: var(--level0); color: var(--muted); }
+  .pollen-pill.p1 { background: #d4edaa; color: #3a6000; }
+  .pollen-pill.p2 { background: var(--level1); color: #5a3e00; }
+  .pollen-pill.p3 { background: var(--level2); color: #fff; }
+  .pollen-pill.p4 { background: var(--level3); color: #fff; }
+
+  /* POLLEN DETAIL */
+  .pollen-group-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    max-width: 480px;
+    margin: 0 auto 10px;
+  }
+
+  .pollen-group-title {
+    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
+    font-size: 15px;
+    font-style: italic;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pollen-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .pollen-detail-row:last-child { border-bottom: none; }
+
+  .pollen-detail-name { color: var(--text); font-weight: 500; }
+  .pollen-detail-val { color: var(--muted); font-size: 11px; margin-right: 8px; }
+
+  /* VIEW TOGGLE */
+  .view-toggle {
+    display: flex;
+    max-width: 480px;
+    margin: 0 auto 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3px;
+    gap: 3px;
+  }
+
+  .view-btn {
+    flex: 1;
+    padding: 7px;
+    border: none;
+    background: transparent;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .view-btn.active {
+    background: var(--text);
+    color: #fff;
+  }
+
+  /* EDIT MODAL */
+  .edit-row {
+    margin-bottom: 14px;
+  }
+  .edit-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
   /* TOAST */
   #toast {
     position: fixed;
     bottom: calc(var(--nav-h) + 12px);
     left: 50%;
-    transform: translateX(-50%) translateY(80px);
+    transform: translateX(-50%) translateY(120px);
     background: var(--text);
     color: #fff;
     padding: 10px 18px;
@@ -444,12 +610,13 @@
     transition: transform 0.3s ease;
     z-index: 300;
     white-space: nowrap;
+    opacity: 0;
   }
-  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
 </head>
 <body>
-
+<div id="main-scroll">
 <header>
   <div class="logo">
     <h1>🌿 Pollen</h1>
@@ -461,78 +628,156 @@
 <!-- SECTION AUJOURD'HUI -->
 <div id="section-saisie">
 
-  <div class="card card-eyes">
-    <div class="card-header">
-      <div class="card-icon">👁</div>
-      <div class="card-label">Yeux</div>
+  <div class="grid-row">
+    <!-- Pollen -->
+    <div class="card card-pollen" onclick="showPollenDetail()" style="cursor:pointer;">
+      <div class="card-header">
+        <div class="card-icon card-icon-pollen">🌾</div>
+        <div class="card-label">Pollen</div>
+      </div>
+      <div id="pollenSub" style="font-size:10px;color:var(--muted);margin-bottom:6px;">Chargement…</div>
+      <div class="pollen-pills" id="pollenPills"></div>
     </div>
-    <div class="level-selector" id="sel-eyes">
-      <button class="lvl-btn active-0" onclick="setLevel('eyes',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
-      <button class="lvl-btn" onclick="setLevel('eyes',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
-      <button class="lvl-btn" onclick="setLevel('eyes',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
-      <button class="lvl-btn" onclick="setLevel('eyes',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+
+    <!-- Yeux -->
+    <div class="card card-eyes">
+      <div class="card-header">
+        <div class="card-icon">👁</div>
+        <div class="card-label">Yeux</div>
+      </div>
+      <div class="level-selector level-selector-col" id="sel-eyes">
+        <button class="lvl-btn active-0" onclick="setLevel('eyes',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setLevel('eyes',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setLevel('eyes',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setLevel('eyes',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
     </div>
   </div>
 
-  <div class="card card-nose">
-    <div class="card-header">
-      <div class="card-icon">👃</div>
-      <div class="card-label">Nez</div>
+  <div class="grid-row">
+    <!-- Nez -->
+    <div class="card card-nose">
+      <div class="card-header">
+        <div class="card-icon">👃</div>
+        <div class="card-label">Nez</div>
+      </div>
+      <div class="level-selector level-selector-col" id="sel-nose">
+        <button class="lvl-btn active-0" onclick="setLevel('nose',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setLevel('nose',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setLevel('nose',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setLevel('nose',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
     </div>
-    <div class="level-selector" id="sel-nose">
-      <button class="lvl-btn active-0" onclick="setLevel('nose',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
-      <button class="lvl-btn" onclick="setLevel('nose',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
-      <button class="lvl-btn" onclick="setLevel('nose',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
-      <button class="lvl-btn" onclick="setLevel('nose',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
-    </div>
-  </div>
 
-  <div class="card card-asthma">
-    <div class="card-header">
-      <div class="card-icon">🫁</div>
-      <div class="card-label">Asthme</div>
-    </div>
-    <div class="level-selector" id="sel-asthma">
-      <button class="lvl-btn active-0" onclick="setLevel('asthma',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
-      <button class="lvl-btn" onclick="setLevel('asthma',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
-      <button class="lvl-btn" onclick="setLevel('asthma',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
-      <button class="lvl-btn" onclick="setLevel('asthma',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
-    </div>
-    <div class="ventoline-row">
-      <span class="ventoline-label">💨 Doses Ventoline</span>
-      <div class="ventoline-controls">
-        <button class="vent-btn" onclick="changeVentoline(-1)">−</button>
-        <span class="vent-count" id="ventCount">0</span>
-        <button class="vent-btn" onclick="changeVentoline(1)">+</button>
-        <span class="vent-unit">doses</span>
+    <!-- Asthme -->
+    <div class="card card-asthma">
+      <div class="card-header">
+        <div class="card-icon">🫁</div>
+        <div class="card-label">Asthme</div>
+      </div>
+      <div class="level-selector level-selector-col" id="sel-asthma">
+        <button class="lvl-btn active-0" onclick="setLevel('asthma',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setLevel('asthma',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setLevel('asthma',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setLevel('asthma',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
+      <div class="ventoline-row">
+        <span class="ventoline-label">💨 Ventoline</span>
+        <div class="ventoline-controls">
+          <button class="vent-btn" onclick="changeVentoline(-1)">−</button>
+          <span class="vent-count" id="ventCount">0</span>
+          <button class="vent-btn" onclick="changeVentoline(1)">+</button>
+        </div>
       </div>
     </div>
   </div>
 
 </div>
 
+<!-- SECTION POLLEN DETAIL -->
+<div id="section-pollen" style="display:none">
+  <div style="max-width:480px;margin:0 auto 16px;display:flex;align-items:center;gap:10px;">
+    <button onclick="showSection('saisie')" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;color:var(--muted);">←</button>
+    <span style="font-family:'DM Serif Display',serif;font-size:18px;font-style:italic;">Pollen · Beaumont</span>
+  </div>
+  <div id="pollenDetail"></div>
+</div>
+
 <!-- SECTION HISTORIQUE -->
 <div id="section-historique" style="display:none">
 
-  <div class="period-selector">
-    <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jours</button>
-    <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
-    <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Années</button>
+  <div class="hist-controls">
+    <div class="hist-filter-wrap">
+      <select class="hist-select" id="filterSelect" onchange="setFilter(this.value)">
+        <option value="all">Tout</option>
+        <option value="eyes">👁 Yeux</option>
+        <option value="nose">👃 Nez</option>
+        <option value="asthma">🫁 Asthme</option>
+      </select>
+    </div>
+    <div class="period-selector">
+      <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jours</button>
+      <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
+      <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Années</button>
+    </div>
   </div>
 
-  <div class="type-filter">
-    <button class="type-btn active-all" onclick="setFilter('all')" id="fAll">Tout</button>
-    <button class="type-btn" onclick="setFilter('eyes')" id="fEyes">👁 Yeux</button>
-    <button class="type-btn" onclick="setFilter('nose')" id="fNose">👃 Nez</button>
-    <button class="type-btn" onclick="setFilter('asthma')" id="fAsthma">🫁 Asthme</button>
-  </div>
-
-  <div class="chart-card" id="chartCard">
-    <canvas id="histChart"></canvas>
+  <div class="view-toggle">
+    <button class="view-btn active" id="vBtnGraph" onclick="setView('graph')">Graphique</button>
+    <button class="view-btn" id="vBtnList" onclick="setView('liste')">Liste</button>
   </div>
 
   <div class="summary-row" id="summaryRow"></div>
-  <div id="histList"></div>
+
+  <div id="viewGraph">
+    <div class="chart-card" id="chartCard">
+      <canvas id="histChart"></canvas>
+    </div>
+  </div>
+
+  <div id="viewList" style="display:none">
+    <div id="histList"></div>
+  </div>
+</div>
+
+</div><!-- end main-scroll -->
+
+<!-- EDIT MODAL -->
+<div id="editModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.4);align-items:flex-end;">
+  <div style="background:var(--surface);border-radius:20px 20px 0 0;padding:24px 16px 40px;width:100%;max-width:480px;margin:0 auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <span id="editModalDate" style="font-family:'DM Serif Display',serif;font-size:18px;font-style:italic;"></span>
+      <button onclick="closeEditModal()" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1;">×</button>
+    </div>
+    <div class="edit-row">
+      <span class="edit-label">👁 Yeux</span>
+      <div class="level-selector" id="edit-sel-eyes">
+        <button class="lvl-btn" onclick="setEditLevel('eyes',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('eyes',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('eyes',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('eyes',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
+    </div>
+    <div class="edit-row">
+      <span class="edit-label">👃 Nez</span>
+      <div class="level-selector" id="edit-sel-nose">
+        <button class="lvl-btn" onclick="setEditLevel('nose',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('nose',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('nose',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('nose',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
+    </div>
+    <div class="edit-row">
+      <span class="edit-label">🫁 Asthme</span>
+      <div class="level-selector" id="edit-sel-asthma">
+        <button class="lvl-btn" onclick="setEditLevel('asthma',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('asthma',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('asthma',2)" data-val="2">2<span class="lvl-label">Moyen</span></button>
+        <button class="lvl-btn" onclick="setEditLevel('asthma',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
+      </div>
+    </div>
+    <button onclick="saveEditEntry()" style="width:100%;margin-top:20px;padding:14px;background:var(--text);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Enregistrer</button>
+  </div>
 </div>
 
 <!-- BOTTOM NAV -->
@@ -614,9 +859,45 @@
   function showSection(s) {
     document.getElementById('section-saisie').style.display = s === 'saisie' ? '' : 'none';
     document.getElementById('section-historique').style.display = s === 'historique' ? '' : 'none';
+    document.getElementById('section-pollen').style.display = s === 'pollen' ? '' : 'none';
     document.getElementById('nav-saisie').classList.toggle('active', s === 'saisie');
     document.getElementById('nav-historique').classList.toggle('active', s === 'historique');
     if (s === 'historique') renderHistory();
+  }
+
+  function showPollenDetail() {
+    var groups = window.pollenGroupsData;
+    if (!groups) return;
+    var levelLabels = ['Nul','Faible','Modéré','Élevé','Très élevé'];
+    var levelClasses = ['p0','p1','p2','p3','p4'];
+    var html = '';
+    groups.forEach(function(group) {
+      html += '<div class="pollen-group-card">';
+      html += '<div class="pollen-group-title"><span>' + group.label + '</span>';
+      html += '<span class="pollen-pill ' + levelClasses[group.maxLevel] + '" style="width:auto;display:inline-block;text-align:left;">' + levelLabels[group.maxLevel] + '</span>';
+      html += '</div>';
+      group.items.forEach(function(item) {
+        html += '<div class="pollen-detail-row">';
+        html += '<span class="pollen-detail-name">' + item.label + '</span>';
+        html += '<div style="display:flex;align-items:center;gap:8px;">';
+        html += '<span class="pollen-detail-val">' + item.value + ' gr/m³</span>';
+        html += '<span class="pollen-pill ' + levelClasses[item.level] + '" style="width:auto;display:inline-block;">' + levelLabels[item.level] + '</span>';
+        html += '</div></div>';
+      });
+      html += '</div>';
+    });
+    document.getElementById('pollenDetail').innerHTML = html;
+    showSection('pollen');
+  }
+
+  var currentView = 'graph';
+
+  function setView(v) {
+    currentView = v;
+    document.getElementById('viewGraph').style.display = v === 'graph' ? '' : 'none';
+    document.getElementById('viewList').style.display = v === 'liste' ? '' : 'none';
+    document.getElementById('vBtnGraph').classList.toggle('active', v === 'graph');
+    document.getElementById('vBtnList').classList.toggle('active', v === 'liste');
   }
 
   function setPeriod(p) {
@@ -628,10 +909,8 @@
 
   function setFilter(f) {
     currentFilter = f;
-    ['All','Eyes','Nose','Asthma'].forEach(function(x) {
-      document.getElementById('f' + x).className = 'type-btn';
-    });
-    document.getElementById('f' + f.charAt(0).toUpperCase() + f.slice(1)).className = 'type-btn active-' + f;
+    var sel = document.getElementById('filterSelect');
+    if (sel) sel.value = f;
     renderHistory();
   }
 
@@ -702,6 +981,13 @@
         }
       }
     });
+  }
+
+  function summaryColorClass(val) {
+    if (isNaN(val) || val === 0) return 'sum-lv0';
+    if (val < 1.5) return 'sum-lv1';
+    if (val < 2.5) return 'sum-lv2';
+    return 'sum-lv3';
   }
 
   function renderHistory() {
@@ -783,10 +1069,19 @@
     const avg = totalDays ? (sumAll / totalDays).toFixed(1) : '—';
     const symLabel = currentFilter === 'all' ? 'Global' : currentFilter === 'eyes' ? 'Yeux' : currentFilter === 'nose' ? 'Nez' : 'Asthme';
 
-    document.getElementById('summaryRow').innerHTML =
-      '<div class="summary-item"><span class="s-val">' + totalDays + '</span><span class="s-label">Jours</span></div>' +
-      '<div class="summary-item"><span class="s-val">' + avg + '</span><span class="s-label">Moy. ' + symLabel + '</span></div>' +
-      '<div class="summary-item"><span class="s-val">' + maxDay + '</span><span class="s-label">Max ' + symLabel + '</span></div>';
+    if (currentFilter === 'all') {
+      var avgE = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].eyes||0);},0)/totalDays).toFixed(1) : '—';
+      var avgN = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].nose||0);},0)/totalDays).toFixed(1) : '—';
+      var avgA = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].asthma||0);},0)/totalDays).toFixed(1) : '—';
+      document.getElementById('summaryRow').innerHTML =
+        '<div class="summary-item ' + summaryColorClass(parseFloat(avgE)) + '"><span class="s-val">' + avgE + '</span><span class="s-label">Moy. Yeux</span></div>' +
+        '<div class="summary-item ' + summaryColorClass(parseFloat(avgN)) + '"><span class="s-val">' + avgN + '</span><span class="s-label">Moy. Nez</span></div>' +
+        '<div class="summary-item ' + summaryColorClass(parseFloat(avgA)) + '"><span class="s-val">' + avgA + '</span><span class="s-label">Moy. Asthme</span></div>';
+    } else {
+      document.getElementById('summaryRow').innerHTML =
+        '<div class="summary-item ' + summaryColorClass(parseFloat(avg)) + '"><span class="s-val">' + avg + '</span><span class="s-label">Moyenne</span></div>' +
+        '<div class="summary-item ' + summaryColorClass(maxDay) + '"><span class="s-val">' + maxDay + '</span><span class="s-label">Maximum</span></div>';
+    }
 
     const histList = document.getElementById('histList');
     if (groupList.length === 0) {
@@ -803,14 +1098,15 @@
         const isToday = group.key === todayKey();
         const el = document.createElement('div');
         el.className = 'history-entry';
+        el.style.cursor = 'pointer';
+        (function(k) { el.addEventListener('click', function() { openEditModal(k); }); })(e.dateKey);
         el.innerHTML =
           '<div class="entry-date">' + group.label + (isToday ? '<span class="entry-sub">Aujourd\'hui</span>' : '') + '</div>' +
           '<div class="entry-badges">' +
           (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><div class="' + badgeClass(e.eyes) + '">' + e.eyes + '</div><span class="sym-name">Yeux</span></div>' : '') +
           (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><div class="' + badgeClass(e.nose) + '">' + e.nose + '</div><span class="sym-name">Nez</span></div>' : '') +
           (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><div class="' + badgeClass(e.asthma) + '">' + e.asthma + '</div><span class="sym-name">Asthme</span></div>' : '') +
-          '</div>' +
-          '<button class="del-btn" onclick="deleteEntry(\'' + e.dateKey + '\')" title="Supprimer">×</button>';
+          '</div><span style="font-size:13px;color:var(--muted);">✏️</span>';
         histList.appendChild(el);
       } else {
         const count = group.entries.length;
@@ -836,11 +1132,196 @@
     });
   }
 
+
+  // POLLEN — helpers globaux
+  function pollenDayAvg(arr) {
+    var vals = (arr || []).filter(function(v) { return v !== null; });
+    if (vals.length === 0) return 0;
+    return vals.reduce(function(a,b){return a+b;},0) / vals.length;
+  }
+
+  function pollenLevel(val) {
+    if (val < 10) return 0;
+    if (val < 30) return 1;
+    if (val < 80) return 2;
+    if (val < 200) return 3;
+    return 4;
+  }
+
+  var POLLEN_GROUPS = [
+    {
+      label: 'Arbres',
+      types: [
+        { key: 'alder_pollen',    label: 'Aulne' },
+        { key: 'birch_pollen',    label: 'Bouleau' },
+        { key: 'oak_pollen',      label: 'Chêne' },
+        { key: 'ash_pollen',      label: 'Frêne' },
+        { key: 'hornbeam_pollen', label: 'Charme' },
+        { key: 'cypress_pollen',  label: 'Cyprès' },
+        { key: 'hazel_pollen',    label: 'Noisetier' },
+        { key: 'olive_pollen',    label: 'Olivier' }
+      ]
+    },
+    {
+      label: 'Graminées',
+      types: [
+        { key: 'grass_pollen', label: 'Graminées' }
+      ]
+    },
+    {
+      label: 'Plantes',
+      types: [
+        { key: 'mugwort_pollen',  label: 'Armoise' },
+        { key: 'ragweed_pollen',  label: 'Ambroisie' },
+        { key: 'plantain_pollen', label: 'Plantain' }
+      ]
+    }
+  ];
+
+  // Mock data pour test local — remplacer par fetch API sur GitHub
+  var MOCK_HOURLY = {
+    alder_pollen:    [0,0,0,0,0,0,5,8,12,15,18,20,18,15,12,10,8,5,3,2,1,0,0,0],
+    birch_pollen:    [0,0,0,0,0,0,10,25,45,60,75,80,72,65,55,45,35,25,15,10,5,2,0,0],
+    oak_pollen:      [0,0,0,0,0,0,8,15,30,50,65,70,60,50,40,30,20,12,6,3,1,0,0,0],
+    ash_pollen:      [0,0,0,0,0,0,2,4,6,8,10,10,8,6,5,4,3,2,1,0,0,0,0,0],
+    hornbeam_pollen: [0,0,0,0,0,0,1,2,3,4,5,5,4,4,3,2,1,1,0,0,0,0,0,0],
+    cypress_pollen:  [0,0,0,0,0,0,0,1,2,2,3,3,2,2,1,1,0,0,0,0,0,0,0,0],
+    hazel_pollen:    [0,0,0,0,0,0,3,6,10,14,18,20,18,14,10,8,5,3,1,0,0,0,0,0],
+    olive_pollen:    [0,0,0,0,0,0,0,0,1,2,3,3,2,2,1,1,0,0,0,0,0,0,0,0],
+    grass_pollen:    [0,0,0,0,0,0,2,5,8,10,12,15,14,12,10,8,6,4,2,1,0,0,0,0],
+    mugwort_pollen:  [0,0,0,0,0,0,0,2,3,4,5,5,4,3,3,2,2,1,0,0,0,0,0,0],
+    ragweed_pollen:  [0,0,0,0,0,0,0,0,1,2,4,5,5,4,3,2,1,0,0,0,0,0,0,0],
+    plantain_pollen: [0,0,0,0,0,0,1,2,4,6,8,9,8,6,5,4,3,2,1,0,0,0,0,0]
+  };
+
+  function processPollen(hourly) {
+    var LEVEL_LABELS = ['Nul','Faible','Modéré','Élevé','Très élevé'];
+    var html = '';
+    window.pollenGroupsData = POLLEN_GROUPS.map(function(group) {
+      var items = [];
+      var maxLvl = 0;
+      group.types.forEach(function(t) {
+        var avg = pollenDayAvg(hourly[t.key]);
+        var lvl = pollenLevel(avg);
+        items.push({ label: t.label, level: lvl, value: Math.round(avg) });
+        if (lvl > maxLvl) maxLvl = lvl;
+      });
+      html += '<span class="pollen-pill p' + maxLvl + '">' + group.label + ' · ' + LEVEL_LABELS[maxLvl] + '</span>';
+      return { label: group.label, items: items, maxLevel: maxLvl };
+    });
+    document.getElementById('pollenPills').innerHTML = html;
+    var now = new Date();
+      var hh = String(now.getHours()).padStart(2,'0');
+      var mm = String(now.getMinutes()).padStart(2,'0');
+      document.getElementById('pollenSub').textContent = 'Beaumont · ' + hh + ':' + mm;
+  }
+
+  async function fetchPollen() {
+    try {
+      // Pour prod (GitHub Pages), décommenter les 3 lignes suivantes et supprimer MOCK_HOURLY :
+      // var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=45.97&longitude=6.08&hourly=alder_pollen,birch_pollen,oak_pollen,ash_pollen,hornbeam_pollen,cypress_pollen,hazel_pollen,olive_pollen,grass_pollen,mugwort_pollen,ragweed_pollen,plantain_pollen&timezone=Europe%2FParis&forecast_days=1';
+      // var res = await fetch(url); var json = await res.json();
+      // processPollen(json.hourly);
+      processPollen(MOCK_HOURLY);
+    } catch(e) {
+      document.getElementById('pollenSub').textContent = 'Données non disponibles';
+      document.getElementById('pollenPills').innerHTML = '<span style="font-size:11px;color:var(--muted);font-style:italic;">Impossible de charger les données pollen.</span>';
+    }
+  }
+  fetchPollen();
+
   // Init
   const today = new Date();
   const dateEl = document.getElementById('dateToday');
   dateEl.textContent = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   dateEl.style.textTransform = 'capitalize';
+
+  var editKey = null;
+  var editLevels = { eyes: 0, nose: 0, asthma: 0 };
+
+  function openEditModal(key) {
+    editKey = key;
+    var data = getData();
+    var e = data[key];
+    if (!e) return;
+    editLevels = { eyes: e.eyes || 0, nose: e.nose || 0, asthma: e.asthma || 0 };
+
+    // Set date label
+    var parts = key.split('/');
+    var d = new Date(parts[2] + '-' + parts[1] + '-' + parts[0] + 'T12:00:00');
+    document.getElementById('editModalDate').textContent = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+    // Set button states
+    ['eyes','nose','asthma'].forEach(function(sym) {
+      var sel = document.getElementById('edit-sel-' + sym);
+      sel.querySelectorAll('.lvl-btn').forEach(function(btn) {
+        btn.className = 'lvl-btn';
+        if (parseInt(btn.dataset.val) === editLevels[sym]) btn.className = 'lvl-btn active-' + editLevels[sym];
+      });
+    });
+
+    var modal = document.getElementById('editModal');
+    modal.style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+    editKey = null;
+  }
+
+  function setEditLevel(sym, val) {
+    editLevels[sym] = val;
+    var sel = document.getElementById('edit-sel-' + sym);
+    sel.querySelectorAll('.lvl-btn').forEach(function(btn) {
+      btn.className = 'lvl-btn';
+      if (parseInt(btn.dataset.val) === val) btn.className = 'lvl-btn active-' + val;
+    });
+  }
+
+  function saveEditEntry() {
+    if (!editKey) return;
+    var data = getData();
+    if (!data[editKey]) return;
+    data[editKey].eyes = editLevels.eyes;
+    data[editKey].nose = editLevels.nose;
+    data[editKey].asthma = editLevels.asthma;
+    data[editKey].ts = Date.now();
+    saveData(data);
+    closeEditModal();
+    renderHistory();
+    showToast('✓ Modifié');
+  }
+
+  function deleteEditEntry() {
+    if (!editKey) return;
+    var data = getData();
+    delete data[editKey];
+    saveData(data);
+    closeEditModal();
+    renderHistory();
+    showToast('🗑 Supprimé');
+  }
+
+  // Faux historique pour test — à supprimer en prod
+  (function() {
+    var data = getData();
+    var today = new Date();
+    for (var i = 1; i <= 30; i++) {
+      var d = new Date(today);
+      d.setDate(today.getDate() - i);
+      var key = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+      if (!data[key]) {
+        data[key] = {
+          eyes:     Math.floor(Math.random() * 4),
+          nose:     Math.floor(Math.random() * 4),
+          asthma:   Math.floor(Math.random() * 4),
+          ventoline: Math.floor(Math.random() * 3),
+          ts: d.getTime()
+        };
+      }
+    }
+    saveData(data);
+  })();
 
   const existing = getData()[todayKey()];
   if (existing) {
