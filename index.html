@@ -46,7 +46,7 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding: 16px 12px 12px;
+    padding: 16px 12px calc(var(--nav-h) + 12px);
     -webkit-overflow-scrolling: touch;
   }
 
@@ -496,9 +496,10 @@
     margin: 0;
   }
 
-  .grid-saisie > .date-today {
-    margin-top: 14px;
-    margin-bottom: 2px;
+  .grid-saisie > .date-today,
+  .grid-bottom > .date-today {
+    margin-top: 22px;
+    margin-bottom: 4px;
     flex: none;
   }
 
