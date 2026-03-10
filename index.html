@@ -372,17 +372,15 @@
 
   .summary-item .s-val {
     font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 24px;
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 8px;
+    font-size: 28px;
+    display: block;
     margin-bottom: 4px;
   }
 
-  .summary-item.sum-lv0 .s-val { background: var(--level0); color: var(--muted); }
-  .summary-item.sum-lv1 .s-val { background: var(--level1); color: #5a3e00; }
-  .summary-item.sum-lv2 .s-val { background: var(--level2); color: #fff; }
-  .summary-item.sum-lv3 .s-val { background: var(--level3); color: #fff; }
+  .summary-item.sum-lv0 .s-val { color: var(--muted); }
+  .summary-item.sum-lv1 .s-val { color: #b07e00; }
+  .summary-item.sum-lv2 .s-val { color: #c96030; }
+  .summary-item.sum-lv3 .s-val { color: var(--level3); }
 
   .summary-item .s-label {
     font-size: 10px;
@@ -587,31 +585,30 @@
   .view-toggle {
     display: flex;
     max-width: 480px;
-    margin: 0 auto 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 3px;
-    gap: 3px;
+    margin: 0 auto 16px;
+    border-bottom: 1.5px solid var(--border);
+    gap: 0;
   }
 
   .view-btn {
     flex: 1;
-    padding: 7px;
+    padding: 8px 0 10px;
     border: none;
     background: transparent;
-    border-radius: 9px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--muted);
     cursor: pointer;
     transition: all 0.15s;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
   }
 
   .view-btn.active {
-    background: var(--text);
-    color: #fff;
+    color: var(--text);
+    font-weight: 700;
+    border-bottom: 2px solid var(--text);
   }
 
   /* EDIT MODAL */
@@ -711,6 +708,17 @@
   .sym-opt-3.active .sym-opt-lbl { color: rgba(255,255,255,0.8); }
   .sym-opt-2.active .sym-opt-lbl { color: rgba(255,255,255,0.8); }
   .sym-opt-1.active .sym-opt-lbl { color: #7a5800; }
+
+  /* LEVEL TEXT COLORS (list + summary) */
+  .lv-color-0 { color: var(--muted); }
+  .lv-color-1 { color: #b07e00; }
+  .lv-color-2 { color: #c96030; }
+  .lv-color-3 { color: var(--level3); }
+
+  .sym-val-num {
+    font-size: 22px !important;
+    line-height: 1;
+  }
 
   /* TOAST */
   #toast {
@@ -831,6 +839,7 @@
 <!-- SECTION HISTORIQUE -->
 <div id="section-historique" style="display:none;padding-top:12px;">
 
+  <h2 style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:28px;letter-spacing:-0.5px;margin-bottom:14px;">Historique</h2>
 
   <div class="view-toggle">
     <button class="view-btn active" id="vBtnGraph" onclick="setView('graph')">Graphique</button>
@@ -839,13 +848,7 @@
 
   <div id="viewGraph">
     <div class="chart-card" id="chartCard">
-      <canvas id="histChart" style="cursor:crosshair;"></canvas>
-      <div class="chart-footer">
-        <div class="period-selector">
-          <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jour</button>
-          <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
-          <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Année</button>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <div class="hist-filter-wrap">
           <select class="hist-select" id="filterSelect" onchange="setFilter(this.value)">
             <option value="eyes">Yeux</option>
@@ -853,9 +856,14 @@
             <option value="asthma">Asthme</option>
           </select>
         </div>
+        <div class="period-selector">
+          <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jour</button>
+          <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
+          <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Année</button>
+        </div>
       </div>
+      <canvas id="histChart" style="cursor:crosshair;"></canvas>
     </div>
-  </div>
     <div class="summary-row" id="summaryRow"></div>
   </div>
 
@@ -1027,6 +1035,14 @@
   }
 
   function showSection(s) {
+    // Reset historique view to graph when leaving it
+    if (s !== 'historique') {
+      document.getElementById('viewGraph').style.display = '';
+      document.getElementById('viewList').style.display = 'none';
+      document.getElementById('vBtnGraph').classList.add('active');
+      document.getElementById('vBtnList').classList.remove('active');
+      currentView = 'graph';
+    }
     document.getElementById('section-saisie').style.display = s === 'saisie' ? '' : 'none';
     document.getElementById('section-historique').style.display = s === 'historique' ? '' : 'none';
     document.getElementById('section-pollen').style.display = s === 'pollen' ? '' : 'none';
@@ -1268,32 +1284,21 @@
 
     // Summary stats
     const totalDays = allKeys.length;
-    let sumAll = 0, maxDay = 0;
+    let sumAll = 0;
     allKeys.forEach(function(k) {
       const e = data[k];
-      let s = currentFilter === 'all' ? ((e.eyes || 0) + (e.nose || 0) + (e.asthma || 0)) / 3 :
-               currentFilter === 'eyes' ? (e.eyes || 0) :
+      let s = currentFilter === 'eyes' ? (e.eyes || 0) :
                currentFilter === 'nose' ? (e.nose || 0) : (e.asthma || 0);
       sumAll += s;
-      if (s > maxDay) maxDay = s;
     });
-
     const avg = totalDays ? (sumAll / totalDays).toFixed(1) : '—';
-    const symLabel = currentFilter === 'all' ? 'Global' : currentFilter === 'eyes' ? 'Yeux' : currentFilter === 'nose' ? 'Nez' : 'Asthme';
-
-    if (currentFilter === 'all') {
-      var avgE = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].eyes||0);},0)/totalDays).toFixed(1) : '—';
-      var avgN = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].nose||0);},0)/totalDays).toFixed(1) : '—';
-      var avgA = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].asthma||0);},0)/totalDays).toFixed(1) : '—';
-      document.getElementById('summaryRow').innerHTML =
-        '<div class="summary-item ' + summaryColorClass(parseFloat(avgE)) + '"><span class="s-val">' + avgE + '</span><span class="s-label">Moy. Yeux</span></div>' +
-        '<div class="summary-item ' + summaryColorClass(parseFloat(avgN)) + '"><span class="s-val">' + avgN + '</span><span class="s-label">Moy. Nez</span></div>' +
-        '<div class="summary-item ' + summaryColorClass(parseFloat(avgA)) + '"><span class="s-val">' + avgA + '</span><span class="s-label">Moy. Asthme</span></div>';
-    } else {
-      document.getElementById('summaryRow').innerHTML =
-        '<div class="summary-item ' + summaryColorClass(parseFloat(avg)) + '"><span class="s-val">' + avg + '</span><span class="s-label">Moyenne</span></div>' +
-        '<div class="summary-item ' + summaryColorClass(maxDay) + '"><span class="s-val">' + maxDay + '</span><span class="s-label">Maximum</span></div>';
-    }
+    var avgE = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].eyes||0);},0)/totalDays).toFixed(1) : '—';
+    var avgN = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].nose||0);},0)/totalDays).toFixed(1) : '—';
+    var avgA = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].asthma||0);},0)/totalDays).toFixed(1) : '—';
+    document.getElementById('summaryRow').innerHTML =
+      '<div class="summary-item ' + summaryColorClass(parseFloat(avgE)) + '"><span class="s-val">' + avgE + '</span><span class="s-label">Yeux</span></div>' +
+      '<div class="summary-item ' + summaryColorClass(parseFloat(avgN)) + '"><span class="s-val">' + avgN + '</span><span class="s-label">Nez</span></div>' +
+      '<div class="summary-item ' + summaryColorClass(parseFloat(avgA)) + '"><span class="s-val">' + avgA + '</span><span class="s-label">Asthme</span></div>';
 
     const histList = document.getElementById('histList');
     if (groupList.length === 0) {
@@ -1315,9 +1320,9 @@
         el.innerHTML =
           '<div class="entry-date">' + group.label + (isToday ? '<span class="entry-sub">Aujourd\'hui</span>' : '') + '</div>' +
           '<div class="entry-badges">' +
-          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><div class="' + badgeClass(e.eyes) + '">' + e.eyes + '</div><span class="sym-name">Yeux</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><div class="' + badgeClass(e.nose) + '">' + e.nose + '</div><span class="sym-name">Nez</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><div class="' + badgeClass(e.asthma) + '">' + e.asthma + '</div><span class="sym-name">Asthme</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + e.eyes + '">' + e.eyes + '</span><span class="sym-name">' + SYM_LABELS[e.eyes] + '</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + e.nose + '">' + e.nose + '</span><span class="sym-name">' + SYM_LABELS[e.nose] + '</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + e.asthma + '">' + e.asthma + '</span><span class="sym-name">' + SYM_LABELS[e.asthma] + '</span></div>' : '') +
           '</div>';
         histList.appendChild(el);
       } else {
@@ -1335,9 +1340,9 @@
         el.innerHTML =
           '<div class="entry-date">' + group.label + '<span class="entry-sub">' + count + ' jour' + (count > 1 ? 's' : '') + '</span></div>' +
           '<div class="entry-badges">' +
-          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><div class="' + badgeClass(roundE) + '">' + avgE + '</div><span class="sym-name">Yeux</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><div class="' + badgeClass(roundN) + '">' + avgN + '</div><span class="sym-name">Nez</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><div class="' + badgeClass(roundA) + '">' + avgA + '</div><span class="sym-name">Asthme</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + roundE + '">' + avgE + '</span><span class="sym-name">Yeux</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + roundN + '">' + avgN + '</span><span class="sym-name">Nez</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + roundA + '">' + avgA + '</span><span class="sym-name">Asthme</span></div>' : '') +
           '</div>';
         histList.appendChild(el);
       }
