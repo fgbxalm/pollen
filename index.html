@@ -365,31 +365,46 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 12px;
-    text-align: center;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-
-  .summary-item .s-val {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 28px;
-    display: block;
-    margin-bottom: 4px;
-  }
-
-  .summary-item.sum-lv0 .s-val { color: var(--muted); }
-  .summary-item.sum-lv1 .s-val { color: #b07e00; }
-  .summary-item.sum-lv2 .s-val { color: #c96030; }
-  .summary-item.sum-lv3 .s-val { color: var(--level3); }
 
   .summary-item .s-label {
     font-size: 10px;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--muted);
     display: block;
-    margin-top: 2px;
   }
+
+  .s-lines { display: flex; flex-direction: column; gap: 5px; }
+
+  .s-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  .s-line-lbl {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .s-line-cnt {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .s-lv0 .s-line-lbl { color: var(--muted); }
+  .s-lv1 .s-line-lbl { color: #b07e00; }
+  .s-lv2 .s-line-lbl { color: #c96030; }
+  .s-lv3 .s-line-lbl { color: var(--level3); }
 
   /* HISTORY ENTRIES */
   .history-entry {
@@ -808,7 +823,7 @@
       <div class="card-header" style="justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:8px;">
           <div class="card-icon card-icon-pollen"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M12 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M2 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/><path d="M16 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/></svg></div>
-          <div class="card-label">Pollen</div>
+          <div class="card-label">Concentration pollen</div>
         </div>
         <div id="pollenSub" style="font-size:11px;color:var(--muted);text-align:right;">Chargement…</div>
       </div>
@@ -821,7 +836,7 @@
     <div class="grid-bottom">
 
     <!-- Date au-dessus de Yeux + Nez -->
-    <div class="date-today" id="dateToday"></div>
+    <div class="date-today" id="dateToday" style="display:flex;align-items:baseline;gap:10px;"></div>
 
     <!-- Yeux + Nez -->
     <div class="grid-row">
@@ -1297,10 +1312,10 @@
               font: { family: 'DM Sans', size: 10 },
               includeBounds: false,
               callback: function(v) {
-                if (v === 0) return '0';
-                if (v === 1) return '1';
-                if (v === 2) return '2';
-                if (v === 3) return '3';
+                if (v === 0) return 'Aucun';
+                if (v === 1) return 'Léger';
+                if (v === 2) return 'Moyen';
+                if (v === 3) return 'Fort';
                 return '';
               }
             },
@@ -1400,14 +1415,28 @@
                currentFilter === 'nose' ? (e.nose || 0) : (e.asthma || 0);
       sumAll += s;
     });
-    const avg = totalDays ? (sumAll / totalDays).toFixed(1) : '—';
-    var avgE = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].eyes||0);},0)/totalDays).toFixed(1) : '—';
-    var avgN = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].nose||0);},0)/totalDays).toFixed(1) : '—';
-    var avgA = totalDays ? (allKeys.reduce(function(s,k){return s+(data[k].asthma||0);},0)/totalDays).toFixed(1) : '—';
+    // Compute per-level day counts for each symptom
+    function levelCounts(field) {
+      var counts = [0,0,0,0];
+      allKeys.forEach(function(k){ counts[data[k][field]||0]++; });
+      return counts;
+    }
+    var ce = levelCounts('eyes'), cn = levelCounts('nose'), ca = levelCounts('asthma');
+    var lvlLabels = ['Aucun','Léger','Moyen','Fort'];
+    function summaryLines(counts) {
+      return lvlLabels.map(function(lbl,i){
+        if (counts[i] === 0) return '';
+        var j = counts[i] === 1 ? 'jour' : 'jours';
+        return '<div class="s-line s-lv' + i + '">' +
+          '<span class="s-line-lbl">' + lbl + '</span>' +
+          '<span class="s-line-cnt">' + counts[i] + ' ' + j + '</span>' +
+          '</div>';
+      }).filter(Boolean).join('');
+    }
     document.getElementById('summaryRow').innerHTML =
-      '<div class="summary-item ' + summaryColorClass(parseFloat(avgE)) + '"><span class="s-val">' + avgE + '</span><span class="s-label">Yeux</span></div>' +
-      '<div class="summary-item ' + summaryColorClass(parseFloat(avgN)) + '"><span class="s-val">' + avgN + '</span><span class="s-label">Nez</span></div>' +
-      '<div class="summary-item ' + summaryColorClass(parseFloat(avgA)) + '"><span class="s-val">' + avgA + '</span><span class="s-label">Asthme</span></div>';
+      '<div class="summary-item"><span class="s-label">Yeux</span><div class="s-lines">' + summaryLines(ce) + '</div></div>' +
+      '<div class="summary-item"><span class="s-label">Nez</span><div class="s-lines">' + summaryLines(cn) + '</div></div>' +
+      '<div class="summary-item"><span class="s-label">Asthme</span><div class="s-lines">' + summaryLines(ca) + '</div></div>';
 
     const histList = document.getElementById('histList');
     if (groupList.length === 0) {
@@ -1429,9 +1458,9 @@
         el.innerHTML =
           '<div class="entry-date">' + group.label + (isToday ? '<span class="entry-sub">Aujourd\'hui</span>' : '') + '</div>' +
           '<div class="entry-badges">' +
-          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + e.eyes + '">' + e.eyes + '</span><span class="sym-name">' + SYM_LABELS[e.eyes] + '</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + e.nose + '">' + e.nose + '</span><span class="sym-name">' + SYM_LABELS[e.nose] + '</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + e.asthma + '">' + e.asthma + '</span><span class="sym-name">' + SYM_LABELS[e.asthma] + '</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + e.eyes + '">' + SYM_LABELS[e.eyes] + '</span><span class="sym-name">Yeux</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + e.nose + '">' + SYM_LABELS[e.nose] + '</span><span class="sym-name">Nez</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + e.asthma + '">' + SYM_LABELS[e.asthma] + '</span><span class="sym-name">Asthme</span></div>' : '') +
           '</div>';
         histList.appendChild(el);
       } else {
@@ -1449,9 +1478,9 @@
         el.innerHTML =
           '<div class="entry-date">' + group.label + '<span class="entry-sub">' + count + ' jour' + (count > 1 ? 's' : '') + '</span></div>' +
           '<div class="entry-badges">' +
-          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + roundE + '">' + avgE + '</span><span class="sym-name">Yeux</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + roundN + '">' + avgN + '</span><span class="sym-name">Nez</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val sym-val-num lv-color-' + roundA + '">' + avgA + '</span><span class="sym-name">Asthme</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + roundE + '">' + SYM_LABELS[roundE] + '</span><span class="sym-name">Yeux</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + roundN + '">' + SYM_LABELS[roundN] + '</span><span class="sym-name">Nez</span></div>' : '') +
+          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + roundA + '">' + SYM_LABELS[roundA] + '</span><span class="sym-name">Asthme</span></div>' : '') +
           '</div>';
         histList.appendChild(el);
       }
@@ -1628,8 +1657,9 @@
   // Init
   const today = new Date();
   const dateEl = document.getElementById('dateToday');
-  dateEl.textContent = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  dateEl.style.textTransform = 'capitalize';
+  const dateStr = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const dateStrCap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  dateEl.innerHTML = '<span style="font-weight:800;">Journal</span><span style="font-weight:400;font-size:15px;color:var(--muted);">' + dateStrCap + '</span>';
 
   var editKey = null;
   var editLevels = { eyes: 0, nose: 0, asthma: 0 };
