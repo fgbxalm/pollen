@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Symptômes pollen</title>
+<title>Pulsym</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -28,7 +28,7 @@
     --nav-h: 68px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -809,7 +809,7 @@
 <button id="backBtn" style="display:none;"></button>
 <header>
   <div class="logo">
-    <h1 style="display:flex;align-items:center;gap:8px;"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a2 2 0 0 1 2 2c0 1.1-.9 2-2 2a2 2 0 0 1-2-2c0-1.1.9-2 2-2z"/><path d="M12 16a2 2 0 0 1 2 2c0 1.1-.9 2-2 2a2 2 0 0 1-2-2c0-1.1.9-2 2-2z"/><path d="M2 12a2 2 0 0 1 2-2c1.1 0 2 .9 2 2a2 2 0 0 1-2 2c-1.1 0-2-.9-2-2z"/><path d="M16 12a2 2 0 0 1 2-2c1.1 0 2 .9 2 2a2 2 0 0 1-2 2c-1.1 0-2-.9-2-2z"/><path d="M4.93 4.93a2 2 0 0 1 2.83 0c.78.78.78 2.05 0 2.83a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83z"/><path d="M16.24 16.24a2 2 0 0 1 2.83 0c.78.78.78 2.05 0 2.83a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83z"/><path d="M4.93 19.07a2 2 0 0 1 0-2.83c.78-.78 2.05-.78 2.83 0a2 2 0 0 1 0 2.83c-.78.78-2.05.78-2.83 0z"/><path d="M16.24 7.76a2 2 0 0 1 0-2.83c.78-.78 2.05-.78 2.83 0a2 2 0 0 1 0 2.83c-.78.78-2.05.78-2.83 0z"/></svg> Symptômes pollen</h1>
+    <h1 style="display:flex;align-items:center;gap:8px;"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg> Pulsym</h1>
   </div>
 </header>
 
@@ -821,14 +821,17 @@
     <!-- Pollen — pleine largeur -->
     <div class="card card-pollen" onclick="showPollenDetail()" style="cursor:pointer;">
       <div class="card-header" style="justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div class="card-icon card-icon-pollen"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M12 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M2 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/><path d="M16 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/></svg></div>
-          <div class="card-label">Concentration pollen</div>
-        </div>
+        <div class="card-label">Concentration pollen</div>
         <div id="pollenSub" style="font-size:11px;color:var(--muted);text-align:right;">Chargement…</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px;margin-top:2px;">
         <div class="pollen-pills" id="pollenPills"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;" onclick="event.stopPropagation()">
+        <div class="period-selector">
+          <button class="period-btn active" id="homePBtnNow" onclick="setHomePollenView('now')">Maintenant</button>
+          <button class="period-btn" id="homePBtnDay" onclick="setHomePollenView('day')">Aujourd'hui</button>
+        </div>
       </div>
     </div>
 
@@ -903,15 +906,16 @@
 <!-- SECTION POLLEN DETAIL -->
 <div id="section-pollen" style="display:none">
 
-  <!-- Header: back button left, city right -->
+  <!-- Header: back button left, city centered, spacer right -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-    <button onclick="showSection('saisie')" style="background:var(--surface);border:1px solid var(--border);cursor:pointer;min-width:36px;min-height:36px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text);padding:0;flex-shrink:0;">
+    <button onclick="showSection('saisie');restoreHomePollenView();" style="background:var(--surface);border:1px solid var(--border);cursor:pointer;min-width:36px;min-height:36px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text);padding:0;flex-shrink:0;">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <div id="cityDisplay" onclick="openCitySearch()" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">
       <span id="cityDisplayName" style="font-family:'DM Serif Display',serif;font-size:20px;font-style:italic;color:var(--text);">Beaumont</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);margin-top:2px;"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
+    <div style="width:36px;flex-shrink:0;"></div>
   </div>
 
   <div id="citySearchWrap" style="display:none;margin-bottom:10px;">
@@ -1187,9 +1191,9 @@
 
   function showPollenDetail() {
     if (!lastHourlyData) return;
-    currentPollenView = 'now';
-    document.getElementById('pBtnNow').classList.add('active');
-    document.getElementById('pBtnDay').classList.remove('active');
+    currentPollenView = homePollenView;
+    document.getElementById('pBtnNow').classList.toggle('active', homePollenView === 'now');
+    document.getElementById('pBtnDay').classList.toggle('active', homePollenView === 'day');
     renderPollenDetail(lastHourlyData);
     showSection('pollen');
   }
@@ -1197,6 +1201,39 @@
   var currentView = 'graph';
   var currentPollenView = 'now';
   var lastHourlyData = null;
+  var homePollenView = 'now';
+
+  function restoreHomePollenView() {
+    document.getElementById('homePBtnNow').classList.toggle('active', homePollenView === 'now');
+    document.getElementById('homePBtnDay').classList.toggle('active', homePollenView === 'day');
+    if (lastHourlyData) renderHomePollenPills(lastHourlyData);
+  }
+
+  function setHomePollenView(v) {
+    homePollenView = v;
+    document.getElementById('homePBtnNow').classList.toggle('active', v === 'now');
+    document.getElementById('homePBtnDay').classList.toggle('active', v === 'day');
+    if (lastHourlyData) renderHomePollenPills(lastHourlyData);
+  }
+
+  function renderHomePollenPills(hourly) {
+    var LEVEL_LABELS = ['Nul','Faible','Modéré','Élevé','Très élevé'];
+    var isNow = homePollenView === 'now';
+    var hour = new Date().getHours();
+    var html = '';
+    POLLEN_GROUPS.forEach(function(group) {
+      var maxLvl = 0, maxVal = 0;
+      group.types.forEach(function(t) {
+        var arr = hourly[t.key] || [];
+        var val = Math.round(isNow ? (arr[hour] || 0) : pollenDayMax(arr));
+        var lvl = pollenLevel(val);
+        if (lvl > maxLvl) maxLvl = lvl;
+        if (val > maxVal) maxVal = val;
+      });
+      html += '<div class="pollen-home-row p' + maxLvl + '"><span class="pollen-home-name">' + group.label + '</span><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;color:var(--muted);font-weight:400;">' + maxVal + ' gr/m³</span><span class="pollen-home-badge">' + LEVEL_LABELS[maxLvl] + '</span></div></div>';
+    });
+    document.getElementById('pollenPills').innerHTML = html;
+  }
 
   function setView(v) {
     currentView = v;
@@ -1540,29 +1577,23 @@
 
   function processPollen(hourly) {
     lastHourlyData = hourly;
-    var LEVEL_LABELS = ['Nul','Faible','Modéré','Élevé','Très élevé'];
-    var html = '';
     window.pollenGroupsData = POLLEN_GROUPS.map(function(group) {
       var items = [];
       var maxLvl = 0;
-      var maxVal = 0;
       group.types.forEach(function(t) {
         var val = Math.round(pollenCurrentHour(hourly[t.key]));
         var lvl = pollenLevel(val);
         items.push({ label: t.label, level: lvl, value: val });
-        if (lvl > maxLvl) { maxLvl = lvl; }
-        if (val > maxVal) { maxVal = val; }
+        if (lvl > maxLvl) maxLvl = lvl;
       });
-      html += '<div class="pollen-home-row p' + maxLvl + '"><span class="pollen-home-name">' + group.label + '</span><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;color:var(--muted);font-weight:400;">' + maxVal + ' gr/m³</span><span class="pollen-home-badge">' + LEVEL_LABELS[maxLvl] + '</span></div></div>';
       return { label: group.label, items: items, maxLevel: maxLvl };
     });
-    document.getElementById('pollenPills').innerHTML = html;
+    renderHomePollenPills(hourly);
     var now = new Date();
     var hh = String(now.getHours()).padStart(2,'0');
     var mm = String(now.getMinutes()).padStart(2,'0');
     var cityName = localStorage.getItem('pollen_city_name') || 'Beaumont';
     document.getElementById('pollenSub').textContent = cityName + ' · ' + hh + ':' + mm;
-    var titleEl = document.getElementById('pollenDetailTitle');
     var cityDisplayName = document.getElementById('cityDisplayName');
     if (cityDisplayName) cityDisplayName.textContent = cityName;
   }
@@ -1659,7 +1690,7 @@
   const dateEl = document.getElementById('dateToday');
   const dateStr = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const dateStrCap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-  dateEl.innerHTML = '<span style="font-weight:800;">Journal</span><span style="font-weight:400;font-size:15px;color:var(--muted);">' + dateStrCap + '</span>';
+  dateEl.innerHTML = '<span style="font-weight:800;">Journal symptôme</span><span style="font-weight:400;font-size:15px;color:var(--muted);">' + dateStrCap + '</span>';
 
   var editKey = null;
   var editLevels = { eyes: 0, nose: 0, asthma: 0 };
