@@ -44,12 +44,17 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding: 16px 12px 16px;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px calc(var(--nav-h) + 24px);
     -webkit-overflow-scrolling: touch;
   }
 
   #section-saisie {
-    /* overflow visible to allow sibling sections to scroll */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   #section-historique {
@@ -57,8 +62,7 @@
   }
 
   header {
-    max-width: 480px;
-    margin: 0 auto 8px;
+    margin: 0 0 8px;
     flex-shrink: 0;
   }
 
@@ -137,15 +141,15 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 10px 12px;
-    max-width: 480px;
-    margin: 0 auto 8px;
+    display: flex;
+    flex-direction: column;
   }
 
   .card-header {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 5px;
+    margin-bottom: 6px;
   }
 
   .card-icon {
@@ -159,9 +163,10 @@
     flex-shrink: 0;
   }
 
-  .card-eyes .card-icon { background: var(--eyes-light); }
-  .card-nose .card-icon { background: var(--nose-light); }
-  .card-asthma .card-icon { background: var(--asthma-light); }
+  .card-eyes .card-icon,
+  .card-nose .card-icon,
+  .card-asthma .card-icon { background: none; color: var(--text); }
+  .card-icon-pollen { color: var(--text); }
 
   .card-label {
     font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
@@ -252,6 +257,7 @@
     font-size: 18px;
     min-width: 22px;
     text-align: center;
+    color: var(--muted);
   }
 
   .vent-unit {
@@ -262,16 +268,26 @@
   /* HISTORIQUE */
   .period-selector {
     display: flex;
-    gap: 5px;
+    gap: 2px;
+    background: var(--border);
+    border-radius: 20px;
+    padding: 3px;
+  }
+
+  .chart-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
   }
 
   .period-btn {
-    padding: 6px 11px;
+    padding: 5px 12px;
     border-radius: 20px;
-    border: 1.5px solid var(--border);
+    border: none;
     background: transparent;
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--muted);
     cursor: pointer;
@@ -280,9 +296,10 @@
   }
 
   .period-btn.active {
-    background: var(--accent-light);
-    border-color: var(--accent);
+    background: var(--surface);
     color: var(--text);
+    font-weight: 700;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   }
 
   .hist-controls {
@@ -317,14 +334,17 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 16px;
+    padding: 16px 16px 16px 16px;
+    padding-top: 24px;
     max-width: 480px;
     margin: 0 auto 16px;
+    overflow: visible;
   }
 
   .chart-card canvas {
     width: 100% !important;
-    max-height: 280px;
+    height: 300px !important;
+    overflow: visible;
   }
 
   /* SUMMARY */
@@ -459,11 +479,20 @@
 
 
   /* GRID LAYOUT */
+  .grid-saisie {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 6px;
+    min-height: 0;
+    width: 100%;
+  }
+
   .grid-row {
     display: flex;
     gap: 6px;
-    max-width: 480px;
-    margin: 0 auto 6px;
+    flex: 1;
+    min-height: 0;
   }
 
   .grid-row .card {
@@ -484,7 +513,7 @@
     font-size: 11px;
   }
 
-  .card-icon-pollen { background: #f0f4e0; }
+  .card-icon-pollen { background: none; }
 
   /* POLLEN BANNER */
 
@@ -493,6 +522,7 @@
     flex-direction: column;
     gap: 5px;
     width: 100%;
+    overflow: hidden;
   }
 
   .pollen-pill {
@@ -507,7 +537,7 @@
     box-sizing: border-box;
   }
 
-  .pollen-pill.p0 { background: var(--level0); color: var(--muted); }
+  .pollen-pill.p0 { background: transparent; color: var(--muted); border-color: var(--border); }
   .pollen-pill.p1 { background: #d4edaa; color: #3a6000; }
   .pollen-pill.p2 { background: var(--level1); color: #5a3e00; }
   .pollen-pill.p3 { background: var(--level2); color: #fff; }
@@ -614,12 +644,14 @@
     align-items: center;
     justify-content: center;
     flex: 1;
-    padding: 10px 0 6px;
+    min-height: 0;
+    padding: 6px 0;
     gap: 3px;
   }
 
   .sym-big-val {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 800;
     font-size: 36px;
     line-height: 1;
     color: var(--text);
@@ -633,10 +665,10 @@
     letter-spacing: 0.8px;
   }
 
-  .sym-val-0 .sym-big-val { color: var(--muted); }
-  .sym-val-1 .sym-big-val { color: #b07e00; }
-  .sym-val-2 .sym-big-val { color: #c96030; }
-  .sym-val-3 .sym-big-val { color: var(--level3); }
+  .sym-val-0 .sym-big-val, .sym-val-0 .sym-big-label { color: var(--muted); }
+  .sym-val-1 .sym-big-val, .sym-val-1 .sym-big-label { color: #b07e00; }
+  .sym-val-2 .sym-big-val, .sym-val-2 .sym-big-label { color: #c96030; }
+  .sym-val-3 .sym-big-val, .sym-val-3 .sym-big-label { color: var(--level3); }
 
   /* SYMPTOM SHEET OPTIONS */
   .sym-sheet-options {
@@ -692,25 +724,27 @@
   }
   #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 <body>
 <div id="main-scroll">
+<button id="backBtn" onclick="showSection('saisie')" style="display:none;background:var(--surface);border:1px solid var(--border);cursor:pointer;min-width:36px;min-height:36px;width:36px;height:36px;border-radius:50%;align-items:center;justify-content:center;margin-bottom:12px;color:var(--text);padding:0;flex-shrink:0;" id="backBtn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
 <header>
   <div class="logo">
-    <h1>🌿 Pollen</h1>
-    <span>journal</span>
+    <h1 style="display:flex;align-items:center;gap:8px;"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg> Pollen journal</h1>
   </div>
   <div class="date-today" id="dateToday"></div>
 </header>
 
 <!-- SECTION AUJOURD'HUI -->
-<div id="section-saisie" style="padding-top:12px;">
+<div id="section-saisie" style="padding-top:12px;display:flex;flex-direction:column;height:100%;">
 
+  <div class="grid-saisie">
   <div class="grid-row">
     <!-- Pollen -->
     <div class="card card-pollen" onclick="showPollenDetail()" style="cursor:pointer;">
       <div class="card-header">
-        <div class="card-icon card-icon-pollen">🌾</div>
+        <div class="card-icon card-icon-pollen"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M12 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M2 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/><path d="M16 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/></svg></div>
         <div class="card-label">Pollen</div>
       </div>
       <div id="pollenSub" style="font-size:10px;color:var(--muted);margin-bottom:6px;">Chargement…</div>
@@ -720,11 +754,11 @@
     <!-- Yeux -->
     <div class="card card-eyes sym-card" onclick="openSymSheet('eyes')" style="cursor:pointer;">
       <div class="card-header">
-        <div class="card-icon">👁</div>
+        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
         <div class="card-label">Yeux</div>
       </div>
       <div class="sym-value-display" id="disp-eyes">
-        <span class="sym-big-val" id="val-eyes">0</span>
+        <div style="position:relative;display:inline-flex;align-items:center;"><span class="sym-big-val" id="val-eyes">0</span><span style="position:absolute;left:100%;display:flex;align-items:center;padding-left:3px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg></span></div>
         <span class="sym-big-label" id="lbl-eyes">Rien</span>
       </div>
     </div>
@@ -734,11 +768,11 @@
     <!-- Nez -->
     <div class="card card-nose sym-card" onclick="openSymSheet('nose')" style="cursor:pointer;">
       <div class="card-header">
-        <div class="card-icon">👃</div>
+        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg></div>
         <div class="card-label">Nez</div>
       </div>
       <div class="sym-value-display" id="disp-nose">
-        <span class="sym-big-val" id="val-nose">0</span>
+        <div style="position:relative;display:inline-flex;align-items:center;"><span class="sym-big-val" id="val-nose">0</span><span style="position:absolute;left:100%;display:flex;align-items:center;padding-left:3px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg></span></div>
         <span class="sym-big-label" id="lbl-nose">Rien</span>
       </div>
     </div>
@@ -746,11 +780,11 @@
     <!-- Asthme -->
     <div class="card card-asthma sym-card" onclick="openSymSheet('asthma')" style="cursor:pointer;">
       <div class="card-header">
-        <div class="card-icon">🫁</div>
+        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
         <div class="card-label">Asthme</div>
       </div>
       <div class="sym-value-display" id="disp-asthma">
-        <span class="sym-big-val" id="val-asthma">0</span>
+        <div style="position:relative;display:inline-flex;align-items:center;"><span class="sym-big-val" id="val-asthma">0</span><span style="position:absolute;left:100%;display:flex;align-items:center;padding-left:3px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg></span></div>
         <span class="sym-big-label" id="lbl-asthma">Rien</span>
       </div>
       <div class="ventoline-row">
@@ -763,19 +797,23 @@
       </div>
     </div>
   </div>
+  </div><!-- end grid-saisie -->
 
 </div>
 
 <!-- SECTION POLLEN DETAIL -->
 <div id="section-pollen" style="display:none">
-  <div style="max-width:480px;margin:0 auto 12px;display:flex;align-items:center;gap:10px;">
-    <button onclick="showSection('saisie')" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;color:var(--muted);">←</button>
-    <span id="pollenDetailTitle" style="font-family:'DM Serif Display',serif;font-size:18px;font-style:italic;">Pollen · Beaumont</span>
-  </div>
-  <div style="max-width:480px;margin:0 auto 14px;display:flex;gap:8px;">
-    <input id="cityInput" type="text" placeholder="Rechercher une ville…"
-      style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);color:var(--text);outline:none;"
-      oninput="onCityInput()" />
+
+  <div style="margin-bottom:14px;">
+    <div id="cityDisplay" onclick="openCitySearch()" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;">
+      <span id="cityDisplayName" style="font-family:'DM Serif Display',serif;font-size:22px;font-style:italic;color:var(--text);">Beaumont</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);margin-top:4px;"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div id="citySearchWrap" style="display:none;margin-top:8px;">
+      <input id="cityInput" type="text" placeholder="Rechercher une ville…"
+        style="width:100%;box-sizing:border-box;padding:8px 12px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);color:var(--text);outline:none;"
+        oninput="onCityInput()" onblur="closeCitySearch()" />
+    </div>
   </div>
   <div id="cityResults" style="max-width:480px;margin:0 auto 10px;display:none;"></div>
   <div id="pollenDetail"></div>
@@ -790,25 +828,23 @@
     <button class="view-btn" id="vBtnList" onclick="setView('liste')">Liste</button>
   </div>
 
-  <div class="hist-controls">
-    <div class="hist-filter-wrap">
-      <select class="hist-select" id="filterSelect" onchange="setFilter(this.value)">
-        <option value="all">Tout</option>
-        <option value="eyes">👁 Yeux</option>
-        <option value="nose">👃 Nez</option>
-        <option value="asthma">🫁 Asthme</option>
-      </select>
-    </div>
-    <div class="period-selector">
-      <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jours</button>
-      <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
-      <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Années</button>
-    </div>
-  </div>
-
   <div id="viewGraph">
     <div class="chart-card" id="chartCard">
-      <canvas id="histChart"></canvas>
+      <canvas id="histChart" style="cursor:crosshair;"></canvas>
+      <div class="chart-footer">
+        <div class="period-selector">
+          <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jour</button>
+          <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
+          <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Année</button>
+        </div>
+        <div class="hist-filter-wrap">
+          <select class="hist-select" id="filterSelect" onchange="setFilter(this.value)">
+            <option value="eyes">Yeux</option>
+            <option value="nose">Nez</option>
+            <option value="asthma">Asthme</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
     <div class="summary-row" id="summaryRow"></div>
@@ -840,7 +876,7 @@
       <button onclick="closeEditModal()" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1;">×</button>
     </div>
     <div class="edit-row">
-      <span class="edit-label">👁 Yeux</span>
+      <span class="edit-label">Yeux</span>
       <div class="level-selector" id="edit-sel-eyes">
         <button class="lvl-btn" onclick="setEditLevel('eyes',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
         <button class="lvl-btn" onclick="setEditLevel('eyes',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
@@ -849,7 +885,7 @@
       </div>
     </div>
     <div class="edit-row">
-      <span class="edit-label">👃 Nez</span>
+      <span class="edit-label">Nez</span>
       <div class="level-selector" id="edit-sel-nose">
         <button class="lvl-btn" onclick="setEditLevel('nose',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
         <button class="lvl-btn" onclick="setEditLevel('nose',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
@@ -858,7 +894,7 @@
       </div>
     </div>
     <div class="edit-row">
-      <span class="edit-label">🫁 Asthme</span>
+      <span class="edit-label">Asthme</span>
       <div class="level-selector" id="edit-sel-asthma">
         <button class="lvl-btn" onclick="setEditLevel('asthma',0)" data-val="0">0<span class="lvl-label">Rien</span></button>
         <button class="lvl-btn" onclick="setEditLevel('asthma',1)" data-val="1">1<span class="lvl-label">Léger</span></button>
@@ -873,11 +909,11 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button id="nav-saisie" class="active" onclick="showSection('saisie')">
-    <span class="nav-icon">☀️</span>
+    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg></span>
     Aujourd'hui
   </button>
   <button id="nav-historique" onclick="showSection('historique')">
-    <span class="nav-icon">📊</span>
+    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
     Historique
   </button>
 </nav>
@@ -889,7 +925,7 @@
   const WEBHOOK_WRITE = 'https://hook.eu1.make.com/hgc97i068czunw748dv3ayf9fc0snbm9';
   let levels = { eyes: 0, nose: 0, asthma: 0, ventoline: 0 };
   let currentPeriod = 'jour';
-  let currentFilter = 'all';
+  let currentFilter = 'eyes';
   let chartInstance = null;
 
   function getData() {
@@ -928,7 +964,7 @@
 
   function openSymSheet(sym) {
     currentSym = sym;
-    var titles = { eyes: '👁 Yeux', nose: '👃 Nez', asthma: '🫁 Asthme' };
+    var titles = { eyes: 'Yeux', nose: 'Nez', asthma: 'Asthme' };
     document.getElementById('symSheetTitle').textContent = titles[sym];
     var opts = document.getElementById('symSheetOptions');
     opts.innerHTML = '';
@@ -985,6 +1021,9 @@
     document.getElementById('section-saisie').style.display = s === 'saisie' ? '' : 'none';
     document.getElementById('section-historique').style.display = s === 'historique' ? '' : 'none';
     document.getElementById('section-pollen').style.display = s === 'pollen' ? '' : 'none';
+    document.querySelector('.logo').style.display = (s === 'pollen' || s === 'historique') ? 'none' : '';
+    document.querySelector('.date-today').style.display = (s === 'pollen' || s === 'historique') ? 'none' : '';
+    document.getElementById('backBtn').style.display = s === 'pollen' ? 'flex' : 'none';
     document.getElementById('nav-saisie').classList.toggle('active', s === 'saisie');
     document.getElementById('nav-historique').classList.toggle('active', s === 'historique');
     if (s === 'historique') renderHistory();
@@ -1059,49 +1098,88 @@
     const canvas = document.getElementById('histChart');
     const card = document.getElementById('chartCard');
 
-    if (chartInstance) {
-      chartInstance.destroy();
-      chartInstance = null;
-    }
+    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
 
-    if (labels.length === 0) {
-      card.style.display = 'none';
-      return;
-    }
+    if (labels.length === 0) { card.style.display = 'none'; return; }
     card.style.display = '';
 
-    const datasets = [];
-    if (currentFilter === 'all' || currentFilter === 'eyes') {
-      datasets.push({ label: 'Yeux', data: chartData.eyes, borderColor: '#5b8fa8', backgroundColor: 'rgba(91,143,168,0.12)', tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: '#5b8fa8', borderWidth: 2 });
-    }
-    if (currentFilter === 'all' || currentFilter === 'nose') {
-      datasets.push({ label: 'Nez', data: chartData.nose, borderColor: '#c97c5a', backgroundColor: 'rgba(201,124,90,0.12)', tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: '#c97c5a', borderWidth: 2 });
-    }
-    if (currentFilter === 'all' || currentFilter === 'asthma') {
-      datasets.push({ label: 'Asthme', data: chartData.asthma, borderColor: '#7a6fa0', backgroundColor: 'rgba(122,111,160,0.12)', tension: 0.3, fill: true, pointRadius: 3, pointBackgroundColor: '#7a6fa0', borderWidth: 2 });
-    }
+    const ctx = canvas.getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 260);
+
+    const colorMap = {
+      eyes:   { line: '#5b8fa8', g1: 'rgba(91,143,168,0.55)',  g2: 'rgba(91,143,168,0.15)' },
+      nose:   { line: '#c97c5a', g1: 'rgba(201,124,90,0.55)',  g2: 'rgba(201,124,90,0.15)' },
+      asthma: { line: '#7a6fa0', g1: 'rgba(122,111,160,0.55)', g2: 'rgba(122,111,160,0.15)' }
+    };
+    const c = colorMap[currentFilter] || colorMap.eyes;
+    grad.addColorStop(0, c.g1);
+    grad.addColorStop(1, c.g2);
+
+    const dataKey = currentFilter === 'nose' ? 'nose' : currentFilter === 'asthma' ? 'asthma' : 'eyes';
+    const labelMap = { eyes: 'Yeux', nose: 'Nez', asthma: 'Asthme' };
 
     chartInstance = new Chart(canvas, {
-      type: 'line',
-      data: { labels: labels, datasets: datasets },
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: labelMap[currentFilter],
+          data: chartData[dataKey],
+          backgroundColor: grad,
+          borderColor: c.line,
+          borderWidth: 0,
+          borderRadius: 4,
+          borderSkipped: false,
+          hoverBackgroundColor: c.line
+        }]
+      },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
+        layout: { padding: { top: 6, bottom: 4, left: 4, right: 4 } },
         plugins: {
-          legend: {
-            position: 'top',
-            labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 10, padding: 12 }
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a1714',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            padding: 10,
+            cornerRadius: 10,
+            displayColors: false,
+            callbacks: {
+              label: function(ctx) {
+                const labels = ['Rien','Léger','Moyen','Fort'];
+                return labels[ctx.parsed.y] || ctx.parsed.y;
+              }
+            }
           }
         },
         scales: {
           y: {
-            min: 0, max: 3,
-            ticks: { stepSize: 1, font: { family: 'DM Sans', size: 10 } },
-            grid: { color: '#e8e2d5' }
+            min: 0,
+            max: 3.1,
+            ticks: {
+              stepSize: 1,
+              font: { family: 'DM Sans', size: 10 },
+              includeBounds: false,
+              callback: function(v) {
+                if (v === 0) return '0';
+                if (v === 1) return '1';
+                if (v === 2) return '2';
+                if (v === 3) return '3';
+                return '';
+              }
+            },
+            afterBuildTicks: function(axis) {
+              axis.ticks = [0,1,2,3].map(function(v){ return {value:v}; });
+            },
+            grid: { color: function(ctx) { return ctx.tick.value > 3 ? 'transparent' : 'rgba(232,226,213,0.6)'; } },
+            border: { display: false }
           },
           x: {
-            ticks: { font: { family: 'DM Sans', size: 9 }, maxRotation: 40 },
-            grid: { display: false }
+            ticks: { font: { family: 'DM Sans', size: 9 }, maxRotation: 0, maxTicksLimit: 7 },
+            grid: { display: false },
+            border: { display: false }
           }
         }
       }
@@ -1231,7 +1309,7 @@
           (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><div class="' + badgeClass(e.eyes) + '">' + e.eyes + '</div><span class="sym-name">Yeux</span></div>' : '') +
           (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><div class="' + badgeClass(e.nose) + '">' + e.nose + '</div><span class="sym-name">Nez</span></div>' : '') +
           (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><div class="' + badgeClass(e.asthma) + '">' + e.asthma + '</div><span class="sym-name">Asthme</span></div>' : '') +
-          '</div><span style="font-size:13px;color:var(--muted);">✏️</span>';
+          '</div>';
         histList.appendChild(el);
       } else {
         const count = group.entries.length;
@@ -1329,10 +1407,28 @@
     var cityName = localStorage.getItem('pollen_city_name') || 'Beaumont';
     document.getElementById('pollenSub').textContent = cityName + ' · ' + hh + ':' + mm;
     var titleEl = document.getElementById('pollenDetailTitle');
-    if (titleEl) titleEl.textContent = 'Pollen · ' + cityName;
+    var cityDisplayName = document.getElementById('cityDisplayName');
+    if (cityDisplayName) cityDisplayName.textContent = cityName;
   }
 
   var searchTimer = null;
+
+  function closeCitySearch() {
+    // Small delay to let a city result click register first
+    setTimeout(function() {
+      document.getElementById('cityDisplay').style.display = 'inline-flex';
+      document.getElementById('citySearchWrap').style.display = 'none';
+      document.getElementById('cityResults').style.display = 'none';
+    }, 200);
+  }
+
+  function openCitySearch() {
+    document.getElementById('cityDisplay').style.display = 'none';
+    document.getElementById('citySearchWrap').style.display = 'block';
+    var inp = document.getElementById('cityInput');
+    inp.value = '';
+    inp.focus();
+  }
 
   function onCityInput() {
     clearTimeout(searchTimer);
@@ -1374,6 +1470,11 @@
 
   function selectCity(name, lat, lon) {
     localStorage.setItem('pollen_city_name', name);
+    var cityDisplayName = document.getElementById('cityDisplayName');
+    if (cityDisplayName) cityDisplayName.textContent = name;
+    document.getElementById('cityDisplay').style.display = 'inline-flex';
+    document.getElementById('citySearchWrap').style.display = 'none';
+    document.getElementById('cityResults').style.display = 'none';
     localStorage.setItem('pollen_lat', lat);
     localStorage.setItem('pollen_lon', lon);
     document.getElementById('cityResults').style.display = 'none';
@@ -1390,11 +1491,22 @@
       var json = await res.json();
       processPollen(json.hourly);
     } catch(e) {
-      console.warn('Pollen API indisponible, données de démo utilisées.');
       processPollen(MOCK_HOURLY);
     }
   }
   fetchPollen();
+
+  // Fausses données pour test local
+  (function() {
+    var data = getData();
+    var now = new Date();
+    for (var i = 1; i <= 30; i++) {
+      var d = new Date(now); d.setDate(now.getDate() - i);
+      var k = String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
+      if (!data[k]) data[k] = { eyes: Math.floor(Math.random()*4), nose: Math.floor(Math.random()*4), asthma: Math.floor(Math.random()*4), ventoline: Math.floor(Math.random()*3), ts: d.getTime() };
+    }
+    saveData(data);
+  })();
 
   // Init
   const today = new Date();
