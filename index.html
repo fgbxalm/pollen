@@ -493,6 +493,12 @@
     width: 100%;
   }
 
+  .grid-saisie > .card {
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+  }
+
   .grid-row {
     display: flex;
     gap: 6px;
@@ -772,7 +778,6 @@
   <div class="logo">
     <h1 style="display:flex;align-items:center;gap:8px;"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a2 2 0 0 1 2 2c0 1.1-.9 2-2 2a2 2 0 0 1-2-2c0-1.1.9-2 2-2z"/><path d="M12 16a2 2 0 0 1 2 2c0 1.1-.9 2-2 2a2 2 0 0 1-2-2c0-1.1.9-2 2-2z"/><path d="M2 12a2 2 0 0 1 2-2c1.1 0 2 .9 2 2a2 2 0 0 1-2 2c-1.1 0-2-.9-2-2z"/><path d="M16 12a2 2 0 0 1 2-2c1.1 0 2 .9 2 2a2 2 0 0 1-2 2c-1.1 0-2-.9-2-2z"/><path d="M4.93 4.93a2 2 0 0 1 2.83 0c.78.78.78 2.05 0 2.83a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83z"/><path d="M16.24 16.24a2 2 0 0 1 2.83 0c.78.78.78 2.05 0 2.83a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83z"/><path d="M4.93 19.07a2 2 0 0 1 0-2.83c.78-.78 2.05-.78 2.83 0a2 2 0 0 1 0 2.83c-.78.78-2.05.78-2.83 0z"/><path d="M16.24 7.76a2 2 0 0 1 0-2.83c.78-.78 2.05-.78 2.83 0a2 2 0 0 1 0 2.83c-.78.78-2.05.78-2.83 0z"/></svg> Symptômes pollen</h1>
   </div>
-  <div class="date-today" id="dateToday"></div>
 </header>
 
 <!-- SECTION AUJOURD'HUI -->
@@ -781,16 +786,21 @@
   <div class="grid-saisie">
 
     <!-- Pollen — pleine largeur -->
-    <div class="card card-pollen" onclick="showPollenDetail()" style="cursor:pointer;flex-shrink:0;">
-      <div class="card-header">
-        <div class="card-icon card-icon-pollen"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M12 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M2 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/><path d="M16 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/></svg></div>
-        <div class="card-label">Pollen</div>
+    <div class="card card-pollen" onclick="showPollenDetail()" style="cursor:pointer;">
+      <div class="card-header" style="justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="card-icon card-icon-pollen"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M12 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/><path d="M2 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/><path d="M16 12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3z"/></svg></div>
+          <div class="card-label">Pollen</div>
+        </div>
+        <div id="pollenSub" style="font-size:11px;color:var(--muted);text-align:right;">Chargement…</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px;margin-top:2px;">
-        <div id="pollenSub" style="font-size:10px;color:var(--muted);">Chargement…</div>
         <div class="pollen-pills" id="pollenPills"></div>
       </div>
     </div>
+
+    <!-- Date au-dessus de Yeux + Nez -->
+    <div class="date-today" id="dateToday" style="margin:4px 0 2px;"></div>
 
     <!-- Yeux + Nez -->
     <div class="grid-row">
@@ -826,7 +836,7 @@
     </div>
 
     <!-- Asthme — pleine largeur -->
-    <div class="card card-asthma sym-card" onclick="openSymSheet('asthma')" style="cursor:pointer;flex-shrink:0;">
+    <div class="card card-asthma sym-card" onclick="openSymSheet('asthma')" style="cursor:pointer;">
       <div class="card-header">
         <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
         <div class="card-label">Asthme</div>
@@ -1093,7 +1103,6 @@
     document.getElementById('section-historique').style.display = s === 'historique' ? '' : 'none';
     document.getElementById('section-pollen').style.display = s === 'pollen' ? '' : 'none';
     document.querySelector('.logo').style.display = (s === 'pollen' || s === 'historique') ? 'none' : '';
-    document.querySelector('.date-today').style.display = (s === 'pollen' || s === 'historique') ? 'none' : '';
     document.getElementById('backBtn').style.display = 'none';
     document.getElementById('nav-saisie').classList.toggle('active', s === 'saisie');
     document.getElementById('nav-historique').classList.toggle('active', s === 'historique');
