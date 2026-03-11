@@ -948,9 +948,9 @@
   <div id="viewGraph">
     <div class="chart-card" id="chartCard">
       <!-- En-tête : moyenne -->
-      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px;">
-        <div style="font-size:16px;font-weight:700;color:var(--muted);" id="avgLabel">Moyenne :</div>
-        <div style="font-size:16px;font-weight:700;" id="avgValue">—</div>
+      <div style="display:flex;align-items:baseline;justify-content:flex-end;gap:6px;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:400;color:var(--muted);" id="avgLabel">Moyenne :</div>
+        <div style="font-size:13px;font-weight:700;" id="avgValue">—</div>
       </div>
       <canvas id="histChart" style="cursor:crosshair;"></canvas>
       <!-- Contrôles en bas -->
@@ -1311,6 +1311,34 @@
 
     const dataKey = currentFilter === 'nose' ? 'nose' : currentFilter === 'asthma' ? 'asthma' : 'eyes';
     const labelMap = { eyes: 'Yeux', nose: 'Nez', asthma: 'Asthme' };
+    const ventData = chartData.ventoline || [];
+
+    // Custom plugin: draw purple dot on TOP of bars with ventoline > 0 (asthma view only)
+    const ventPlugin = {
+      id: 'ventDots',
+      afterDatasetsDraw: function(chart) {
+        if (currentFilter !== 'asthma') return;
+        const ctx = chart.ctx;
+        const xAxis = chart.scales.x;
+        const yAxis = chart.scales.y;
+        const r = 4;
+        // Save device pixel ratio to ensure perfect circle
+        ventData.forEach(function(val, i) {
+          if (!val) return;
+          const barMeta = chart.getDatasetMeta(0).data[i];
+          if (!barMeta) return;
+          const x = barMeta.x;
+          const topY = barMeta.y - r - 3;
+          ctx.save();
+          ctx.beginPath();
+          // Use equal radius on both axes to guarantee circle (not ellipse)
+          ctx.ellipse(x, topY, r, r, 0, 0, Math.PI * 2);
+          ctx.fillStyle = '#7a6fa0';
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    };
 
     chartInstance = new Chart(canvas, {
       type: 'bar',
@@ -1327,6 +1355,7 @@
           hoverBackgroundColor: c.line
         }]
       },
+      plugins: [ventPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -1342,8 +1371,13 @@
             displayColors: false,
             callbacks: {
               label: function(ctx) {
-                const labels = ['Rien','Léger','Moyen','Fort'];
-                return labels[ctx.parsed.y] || ctx.parsed.y;
+                const lbls = ['Aucun','Léger','Moyen','Fort'];
+                var lines = [lbls[ctx.parsed.y] || ctx.parsed.y];
+                if (currentFilter === 'asthma') {
+                  var v = ventData[ctx.dataIndex] || 0;
+                  if (v > 0) lines.push('● ' + v + ' Ventoline');
+                }
+                return lines;
               }
             }
           }
@@ -1446,9 +1480,10 @@
     }
 
     renderChart(chartLabels, {
-      eyes: chartGroups.map(function(g) { return getAvg(g.entries, 'eyes'); }),
-      nose: chartGroups.map(function(g) { return getAvg(g.entries, 'nose'); }),
-      asthma: chartGroups.map(function(g) { return getAvg(g.entries, 'asthma'); })
+      eyes:      chartGroups.map(function(g) { return getAvg(g.entries, 'eyes'); }),
+      nose:      chartGroups.map(function(g) { return getAvg(g.entries, 'nose'); }),
+      asthma:    chartGroups.map(function(g) { return getAvg(g.entries, 'asthma'); }),
+      ventoline: chartGroups.map(function(g) { return g.entries.reduce(function(s,e){ return s+(e.ventoline||0); },0); })
     });
 
     // Summary stats
