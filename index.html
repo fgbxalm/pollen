@@ -947,7 +947,14 @@
 
   <div id="viewGraph">
     <div class="chart-card" id="chartCard">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <!-- En-tête : moyenne -->
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:10px;">
+        <div style="font-size:16px;font-weight:700;color:var(--muted);" id="avgLabel">Moyenne :</div>
+        <div style="font-size:16px;font-weight:700;" id="avgValue">—</div>
+      </div>
+      <canvas id="histChart" style="cursor:crosshair;"></canvas>
+      <!-- Contrôles en bas -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
         <div class="hist-filter-wrap">
           <select class="hist-select" id="filterSelect" onchange="setFilter(this.value)">
             <option value="eyes">Yeux</option>
@@ -961,9 +968,7 @@
           <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Année</button>
         </div>
       </div>
-      <canvas id="histChart" style="cursor:crosshair;"></canvas>
     </div>
-    <div class="summary-row" id="summaryRow"></div>
   </div>
 
   <div id="viewList" style="display:none">
@@ -1455,28 +1460,16 @@
                currentFilter === 'nose' ? (e.nose || 0) : (e.asthma || 0);
       sumAll += s;
     });
-    // Compute per-level day counts for each symptom
-    function levelCounts(field) {
-      var counts = [0,0,0,0];
-      allKeys.forEach(function(k){ counts[data[k][field]||0]++; });
-      return counts;
-    }
-    var ce = levelCounts('eyes'), cn = levelCounts('nose'), ca = levelCounts('asthma');
+    // Compute average and show level label
     var lvlLabels = ['Aucun','Léger','Moyen','Fort'];
-    function summaryLines(counts) {
-      return lvlLabels.map(function(lbl,i){
-        if (counts[i] === 0) return '';
-        var j = counts[i] === 1 ? 'jour' : 'jours';
-        return '<div class="s-line s-lv' + i + '">' +
-          '<span class="s-line-lbl">' + lbl + '</span>' +
-          '<span class="s-line-cnt">' + counts[i] + ' ' + j + '</span>' +
-          '</div>';
-      }).filter(Boolean).join('');
+    var lvlColors = ['var(--muted)','#b07e00','#c96030','var(--level3)'];
+    var avgVal = totalDays ? (sumAll / totalDays) : 0;
+    var avgRound = Math.round(avgVal);
+    var avgEl = document.getElementById('avgValue');
+    if (avgEl) {
+      avgEl.textContent = totalDays ? lvlLabels[avgRound] : '—';
+      avgEl.style.color = totalDays ? lvlColors[avgRound] : 'var(--muted)';
     }
-    document.getElementById('summaryRow').innerHTML =
-      '<div class="summary-item"><span class="s-label">Yeux</span><div class="s-lines">' + summaryLines(ce) + '</div></div>' +
-      '<div class="summary-item"><span class="s-label">Nez</span><div class="s-lines">' + summaryLines(cn) + '</div></div>' +
-      '<div class="summary-item"><span class="s-label">Asthme</span><div class="s-lines">' + summaryLines(ca) + '</div></div>';
 
     const histList = document.getElementById('histList');
     if (groupList.length === 0) {
