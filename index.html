@@ -827,7 +827,7 @@
       <div style="display:flex;flex-direction:column;gap:4px;margin-top:2px;">
         <div class="pollen-pills" id="pollenPills"></div>
       </div>
-      <div style="display:flex;justify-content:flex-end;margin-top:8px;" onclick="event.stopPropagation()">
+      <div style="display:flex;justify-content:center;margin-top:8px;" onclick="event.stopPropagation()">
         <div class="period-selector">
           <button class="period-btn active" id="homePBtnNow" onclick="setHomePollenView('now')">Maintenant</button>
           <button class="period-btn" id="homePBtnDay" onclick="setHomePollenView('day')">Aujourd'hui</button>
@@ -1691,7 +1691,7 @@
   const dateEl = document.getElementById('dateToday');
   const dateStr = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const dateStrCap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-  dateEl.innerHTML = '<span style="font-weight:800;">Journal symptôme</span><span style="font-weight:400;font-size:15px;color:var(--muted);">' + dateStrCap + '</span>';
+  dateEl.innerHTML = '<span style="font-weight:800;">Journal symptômes</span><span style="font-weight:400;font-size:15px;color:var(--muted);">' + dateStrCap + '</span>';
 
   var editKey = null;
   var editLevels = { eyes: 0, nose: 0, asthma: 0 };
@@ -1769,11 +1769,25 @@
       const res = await fetch(SHEET_URL);
       if (!res.ok) throw new Error('fetch failed');
       const csv = await res.text();
+
+      function parseCSVLine(line) {
+        const cols = [];
+        let cur = '', inQ = false;
+        for (let i = 0; i < line.length; i++) {
+          const ch = line[i];
+          if (ch === '"') { inQ = !inQ; }
+          else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+          else { cur += ch; }
+        }
+        cols.push(cur.trim());
+        return cols;
+      }
+
       const lines = csv.trim().split('\n').slice(1); // skip header
       const data = {};
       lines.forEach(function(line) {
-        // Parse CSV properly (Google wraps values in quotes)
-        const cols = line.split(',').map(function(c) { return c.replace(/^"|"$/g, '').trim(); });
+        if (!line.trim()) return;
+        const cols = parseCSVLine(line);
         const date = cols[0];
         if (!date || !date.match(/\d{2}\/\d{2}\/\d{4}/)) return;
         data[date] = {
@@ -1784,6 +1798,7 @@
           ts:        Date.now()
         };
       });
+      console.log('Sheet sync OK —', Object.keys(data).length, 'entrées:', Object.keys(data));
       saveData(data);
     } catch(e) {
       console.warn('Sheet sync failed, using localStorage', e);
