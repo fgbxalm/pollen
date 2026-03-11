@@ -923,6 +923,7 @@
       style="width:100%;box-sizing:border-box;padding:8px 12px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;background:var(--surface);color:var(--text);outline:none;"
       oninput="onCityInput()" onblur="closeCitySearch()" />
   </div>
+
   <div id="cityResults" style="max-width:480px;margin:0 auto 10px;display:none;"></div>
 
   <!-- Tab toggle: Maintenant / Aujourd'hui -->
@@ -1036,6 +1037,8 @@
 <div id="toast">✓ Enregistré</div>
 
 <script>
+  const SHEET_ID = '1MSWm8BwZN2MKZeMU8G9DbqqDB1ElKXw81RX5LHnxm4g';
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=Sheet1';
   const STORAGE_KEY = 'pollen_entries';
   const WEBHOOK_WRITE = 'https://hook.eu1.make.com/hgc97i068czunw748dv3ayf9fc0snbm9';
   let levels = { eyes: 0, nose: 0, asthma: 0, ventoline: 0 };
@@ -1612,9 +1615,7 @@
   function openCitySearch() {
     document.getElementById('cityDisplay').style.display = 'none';
     document.getElementById('citySearchWrap').style.display = 'block';
-    var inp = document.getElementById('cityInput');
-    inp.value = '';
-    inp.focus();
+    document.getElementById('cityInput').focus();
   }
 
   function onCityInput() {
@@ -1763,21 +1764,52 @@
     showToast('🗑 Supprimé');
   }
 
-  const existing = getData()[todayKey()];
-  if (existing) {
-    ['eyes','nose','asthma'].forEach(function(sym) {
-      if (existing[sym] !== undefined) {
-        levels[sym] = existing[sym];
-        updateSymDisplay(sym, existing[sym]);
-      }
-    });
-    if (existing.ventoline !== undefined) {
-      levels.ventoline = existing.ventoline;
-      document.getElementById('ventCount').textContent = levels.ventoline;
+  async function syncFromSheet() {
+    try {
+      const res = await fetch(SHEET_URL);
+      if (!res.ok) throw new Error('fetch failed');
+      const csv = await res.text();
+      const lines = csv.trim().split('\n').slice(1); // skip header
+      const data = {};
+      lines.forEach(function(line) {
+        // Parse CSV properly (Google wraps values in quotes)
+        const cols = line.split(',').map(function(c) { return c.replace(/^"|"$/g, '').trim(); });
+        const date = cols[0];
+        if (!date || !date.match(/\d{2}\/\d{2}\/\d{4}/)) return;
+        data[date] = {
+          eyes:      parseInt(cols[1]) || 0,
+          nose:      parseInt(cols[2]) || 0,
+          asthma:    parseInt(cols[3]) || 0,
+          ventoline: parseInt(cols[4]) || 0,
+          ts:        Date.now()
+        };
+      });
+      saveData(data);
+    } catch(e) {
+      console.warn('Sheet sync failed, using localStorage', e);
     }
-  } else {
-    ['eyes','nose','asthma'].forEach(function(sym) { updateSymDisplay(sym, 0); });
   }
+
+  async function init() {
+    await syncFromSheet();
+    const existing = getData()[todayKey()];
+    if (existing) {
+      ['eyes','nose','asthma'].forEach(function(sym) {
+        if (existing[sym] !== undefined) {
+          levels[sym] = existing[sym];
+          updateSymDisplay(sym, existing[sym]);
+        }
+      });
+      if (existing.ventoline !== undefined) {
+        levels.ventoline = existing.ventoline;
+        document.getElementById('ventCount').textContent = levels.ventoline;
+      }
+    } else {
+      ['eyes','nose','asthma'].forEach(function(sym) { updateSymDisplay(sym, 0); });
+    }
+  }
+
+  init();
 </script>
 </body>
 </html>
