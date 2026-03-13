@@ -1352,9 +1352,31 @@
         var daysAsthma = entries.filter(function(e){ return (e.asthma||0)>0; }).length;
         var daysVent   = entries.filter(function(e){ return (e.ventoline||0)>0; }).length;
         var total = entries.length;
-        var daysInPeriod = currentListPeriod === 'mois'
-          ? new Date(g.key.split('-')[0], g.key.split('-')[1], 0).getDate()
-          : 365;
+        var today = new Date();
+        today.setHours(0,0,0,0);
+        var daysInPeriod;
+        if (currentListPeriod === 'mois') {
+          var parts2 = g.key.split('-');
+          var y = parseInt(parts2[0]), m = parseInt(parts2[1]);
+          var firstDay = new Date(y, m-1, 1);
+          var lastDay = new Date(y, m, 0); // last day of month
+          lastDay.setHours(0,0,0,0);
+          if (lastDay <= today) {
+            daysInPeriod = lastDay.getDate(); // month fully elapsed
+          } else {
+            daysInPeriod = today.getDate(); // days elapsed so far this month
+          }
+        } else {
+          var y2 = parseInt(g.key);
+          var dec31 = new Date(y2, 11, 31);
+          dec31.setHours(0,0,0,0);
+          if (dec31 <= today) {
+            daysInPeriod = 365 + (((y2 % 4 === 0 && y2 % 100 !== 0) || y2 % 400 === 0) ? 1 : 0);
+          } else {
+            var jan1 = new Date(y2, 0, 1);
+            daysInPeriod = Math.round((today - jan1) / 86400000) + 1;
+          }
+        }
         var bw = function(lbl, days) {
           return '<div class="badge-wrap">' +
             '<span style="font-size:11px;font-weight:600;color:var(--text);">' + lbl + '</span>' +
