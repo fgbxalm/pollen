@@ -332,6 +332,13 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c8070'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
+    outline: none;
+  }
+
+  .hist-select:focus {
+    outline: none;
+    border-color: var(--border);
+    box-shadow: none;
   }
 
   /* CHART */
@@ -435,11 +442,9 @@
   }
 
   .entry-badges {
-    display: flex;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     flex: 1;
-    justify-content: flex-end;
-    flex-wrap: wrap;
   }
 
   .badge {
@@ -457,7 +462,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 2px;
+    padding: 2px 0;
   }
 
   .badge-wrap span.sym-name {
@@ -963,15 +969,22 @@
           </select>
         </div>
         <div class="period-selector">
-          <button class="period-btn active" onclick="setPeriod('jour')" id="pbJour">Jour</button>
-          <button class="period-btn" onclick="setPeriod('mois')" id="pbMois">Mois</button>
-          <button class="period-btn" onclick="setPeriod('annee')" id="pbAnnee">Année</button>
+          <button class="period-btn active" onclick="setPeriod('jour')"  id="pbJour">Jour</button>
+          <button class="period-btn"        onclick="setPeriod('mois')"  id="pbMois">Mois</button>
+          <button class="period-btn"        onclick="setPeriod('annee')" id="pbAnnee">Année</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="viewList" style="display:none">
+  <div id="viewList" style="display:none;">
+    <div style="display:flex;justify-content:center;margin-bottom:14px;">
+      <div class="period-selector">
+        <button class="period-btn active" onclick="setListPeriod('jour')"  id="lpbJour">Jour</button>
+        <button class="period-btn"        onclick="setListPeriod('mois')"  id="lpbMois">Mois</button>
+        <button class="period-btn"        onclick="setListPeriod('annee')" id="lpbAnnee">Année</button>
+      </div>
+    </div>
     <div id="histList"></div>
   </div>
 </div>
@@ -1249,6 +1262,118 @@
     document.getElementById('viewList').style.display = v === 'liste' ? '' : 'none';
     document.getElementById('vBtnGraph').classList.toggle('active', v === 'graph');
     document.getElementById('vBtnList').classList.toggle('active', v === 'liste');
+    if (v === 'liste') renderHistoryList();
+  }
+
+  var currentListPeriod = 'jour';
+
+  function setListPeriod(p) {
+    currentListPeriod = p;
+    ['Jour','Mois','Annee'].forEach(function(x) {
+      document.getElementById('lpb'+x).classList.remove('active');
+    });
+    document.getElementById('lpb' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
+    renderHistoryList();
+  }
+
+  function renderHistoryList() {
+    const data = getData();
+    const allKeys = Object.keys(data).filter(function(k){ return k.match(/\d{2}\/\d{2}\/\d{4}/); });
+    allKeys.sort(function(a,b){ return keyToDate(b)-keyToDate(a); });
+    const histList = document.getElementById('histList');
+    if (!histList) return;
+
+    var lvlLabels = ['Aucun','Léger','Moyen','Fort'];
+
+    if (currentListPeriod === 'jour') {
+      // Group by day — show all symptoms + ventoline
+      if (allKeys.length === 0) {
+        histList.innerHTML = '<div class="empty-state"><span class="big">🌱</span>Aucune donnée encore.</div>';
+        return;
+      }
+      histList.innerHTML = '';
+      allKeys.forEach(function(k) {
+        var e = data[k];
+        var isToday = k === todayKey();
+        var parts = k.split('/');
+        var d = keyToDate(k);
+        var label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' });
+        label = label.charAt(0).toUpperCase() + label.slice(1);
+        var el = document.createElement('div');
+        el.className = 'history-entry';
+        el.style.cursor = 'pointer';
+        (function(key){ el.addEventListener('click', function(){ openEditModal(key); }); })(k);
+        var lvColors = ['var(--muted)', '#b07e00', '#c96030', 'var(--level3)'];
+        var lvStyle = function(lv) {
+          return 'display:block;font-size:11px;font-weight:400;color:' + lvColors[lv||0] + ';';
+        };
+        var ventHtml = '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Ventoline</span><span style="display:block;font-size:11px;font-weight:400;color:var(--muted);">' + (e.ventoline||0) + '</span></div>';
+        el.innerHTML =
+          '<div class="entry-date">' + label + (isToday ? '<span class="entry-sub">Aujourd\'hui</span>' : '') + '</div>' +
+          '<div class="entry-badges">' +
+          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Yeux</span><span style="' + lvStyle(e.eyes) + '">' + lvlLabels[e.eyes||0] + '</span></div>' +
+          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Nez</span><span style="' + lvStyle(e.nose) + '">' + lvlLabels[e.nose||0] + '</span></div>' +
+          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Asthme</span><span style="' + lvStyle(e.asthma) + '">' + lvlLabels[e.asthma||0] + '</span></div>' +
+          ventHtml +
+          '</div>';
+        histList.appendChild(el);
+      });
+
+    } else {
+      // Group by month or year — count days with symptoms > 0
+      var groups = {};
+      allKeys.forEach(function(k) {
+        var parts = k.split('/');
+        var gKey = currentListPeriod === 'mois'
+          ? parts[2] + '-' + parts[1]
+          : parts[2];
+        if (!groups[gKey]) groups[gKey] = { entries: [], key: gKey };
+        groups[gKey].entries.push(Object.assign({}, data[k]));
+      });
+      var groupList = Object.values(groups).sort(function(a,b){ return b.key.localeCompare(a.key); });
+      if (groupList.length === 0) {
+        histList.innerHTML = '<div class="empty-state"><span class="big">🌱</span>Aucune donnée encore.</div>';
+        return;
+      }
+      histList.innerHTML = '';
+      groupList.forEach(function(g) {
+        var entries = g.entries;
+        var label;
+        if (currentListPeriod === 'mois') {
+          var parts = g.key.split('-');
+          var d = new Date(parts[0]+'-'+parts[1]+'-01T12:00:00');
+          label = d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+          label = label.charAt(0).toUpperCase() + label.slice(1);
+        } else {
+          label = g.key;
+        }
+        var daysEyes   = entries.filter(function(e){ return (e.eyes||0)>0; }).length;
+        var daysNose   = entries.filter(function(e){ return (e.nose||0)>0; }).length;
+        var daysAsthma = entries.filter(function(e){ return (e.asthma||0)>0; }).length;
+        var daysVent   = entries.filter(function(e){ return (e.ventoline||0)>0; }).length;
+        var total = entries.length;
+        var daysInPeriod = currentListPeriod === 'mois'
+          ? new Date(g.key.split('-')[0], g.key.split('-')[1], 0).getDate()
+          : 365;
+        var bw = function(lbl, days) {
+          return '<div class="badge-wrap">' +
+            '<span style="font-size:11px;font-weight:600;color:var(--text);">' + lbl + '</span>' +
+            '<span style="display:block;font-size:11px;font-weight:400;color:var(--muted);">' + days + ' j</span>' +
+            '</div>';
+        };
+        var el = document.createElement('div');
+        el.className = 'history-entry';
+        el.innerHTML =
+          '<div class="entry-date">' + label + '<span class="entry-sub">' + total + ' / ' + daysInPeriod + ' jours</span></div>' +
+          '<div class="entry-badges">' +
+          bw('Yeux',   daysEyes) +
+          bw('Nez',    daysNose) +
+          bw('Asthme', daysAsthma) +
+          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Ventoline</span><span style="display:block;font-size:11px;font-weight:400;color:var(--muted);">' + daysVent + ' j</span></div>' +
+          '</div>';
+        histList.appendChild(el);
+      });
+    }
   }
 
   function setPollenView(v) {
@@ -1298,6 +1423,16 @@
     card.style.display = '';
 
     const ctx = canvas.getContext('2d');
+
+    // Fix canvas pixel ratio to ensure circles are not distorted
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+
     const grad = ctx.createLinearGradient(0, 0, 0, 260);
 
     const colorMap = {
@@ -1316,26 +1451,27 @@
     // Custom plugin: draw purple dot on TOP of bars with ventoline > 0 (asthma view only)
     const ventPlugin = {
       id: 'ventDots',
-      afterDatasetsDraw: function(chart) {
+      afterDraw: function(chart) {
         if (currentFilter !== 'asthma') return;
-        const ctx = chart.ctx;
-        const xAxis = chart.scales.x;
-        const yAxis = chart.scales.y;
+        const canvas = chart.canvas;
+        // Draw on a fresh 2d context reset to CSS pixels
+        const ctx2 = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
         const r = 4;
-        // Save device pixel ratio to ensure perfect circle
         ventData.forEach(function(val, i) {
           if (!val) return;
           const barMeta = chart.getDatasetMeta(0).data[i];
           if (!barMeta) return;
           const x = barMeta.x;
           const topY = barMeta.y - r - 3;
-          ctx.save();
-          ctx.beginPath();
-          // Use equal radius on both axes to guarantee circle (not ellipse)
-          ctx.ellipse(x, topY, r, r, 0, 0, Math.PI * 2);
-          ctx.fillStyle = '#7a6fa0';
-          ctx.fill();
-          ctx.restore();
+          ctx2.save();
+          ctx2.resetTransform();
+          ctx2.scale(dpr, dpr);
+          ctx2.beginPath();
+          ctx2.arc(x, topY, r, 0, Math.PI * 2);
+          ctx2.fillStyle = 'rgba(122,111,160,0.45)';
+          ctx2.fill();
+          ctx2.restore();
         });
       }
     };
@@ -1507,52 +1643,7 @@
     }
 
     const histList = document.getElementById('histList');
-    if (groupList.length === 0) {
-      histList.innerHTML = '<div class="empty-state"><span class="big">🌱</span>Aucune donnée encore.<br>Commence par enregistrer aujourd\'hui !</div>';
-      return;
-    }
-
-    histList.innerHTML = '';
-    groupList.forEach(function(group) {
-      if (currentPeriod === 'jour') {
-        const e = group.entries[0];
-        const val = currentFilter === 'eyes' ? e.eyes : currentFilter === 'nose' ? e.nose : currentFilter === 'asthma' ? e.asthma : null;
-        if (currentFilter !== 'all' && val === 0) return;
-        const isToday = group.key === todayKey();
-        const el = document.createElement('div');
-        el.className = 'history-entry';
-        el.style.cursor = 'pointer';
-        (function(k) { el.addEventListener('click', function() { openEditModal(k); }); })(e.dateKey);
-        el.innerHTML =
-          '<div class="entry-date">' + group.label + (isToday ? '<span class="entry-sub">Aujourd\'hui</span>' : '') + '</div>' +
-          '<div class="entry-badges">' +
-          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + e.eyes + '">' + SYM_LABELS[e.eyes] + '</span><span class="sym-name">Yeux</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + e.nose + '">' + SYM_LABELS[e.nose] + '</span><span class="sym-name">Nez</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + e.asthma + '">' + SYM_LABELS[e.asthma] + '</span><span class="sym-name">Asthme</span></div>' : '') +
-          '</div>';
-        histList.appendChild(el);
-      } else {
-        const count = group.entries.length;
-        const avgE = +(group.entries.reduce(function(s,e){return s+(e.eyes||0);},0)/count).toFixed(1);
-        const avgN = +(group.entries.reduce(function(s,e){return s+(e.nose||0);},0)/count).toFixed(1);
-        const avgA = +(group.entries.reduce(function(s,e){return s+(e.asthma||0);},0)/count).toFixed(1);
-        const roundE = Math.round(avgE), roundN = Math.round(avgN), roundA = Math.round(avgA);
-        if (currentFilter !== 'all') {
-          const v = currentFilter === 'eyes' ? avgE : currentFilter === 'nose' ? avgN : avgA;
-          if (v === 0) return;
-        }
-        const el = document.createElement('div');
-        el.className = 'history-entry';
-        el.innerHTML =
-          '<div class="entry-date">' + group.label + '<span class="entry-sub">' + count + ' jour' + (count > 1 ? 's' : '') + '</span></div>' +
-          '<div class="entry-badges">' +
-          (currentFilter === 'all' || currentFilter === 'eyes' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + roundE + '">' + SYM_LABELS[roundE] + '</span><span class="sym-name">Yeux</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'nose' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + roundN + '">' + SYM_LABELS[roundN] + '</span><span class="sym-name">Nez</span></div>' : '') +
-          (currentFilter === 'all' || currentFilter === 'asthma' ? '<div class="badge-wrap"><span class="sym-big-val lv-color-' + roundA + '">' + SYM_LABELS[roundA] + '</span><span class="sym-name">Asthme</span></div>' : '') +
-          '</div>';
-        histList.appendChild(el);
-      }
-    });
+    if (histList && currentView === 'liste') renderHistoryList();
   }
 
 
