@@ -8,23 +8,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #faf8f3;
-    --surface: #fff;
-    --border: #e8e2d5;
-    --text: #1a1714;
-    --muted: #8c8070;
-    --accent: #c8a84b;
-    --accent-light: #f5edd6;
+    /* Seed.com Inspired Palette */
+    --bg: #f5f4ef;
+    --surface: #ffffff;
+    --border: #d8d6ce;
+    --text: #152920;
+    --muted: #6b7d73;
+    --accent: #124429;
+    --accent-light: #e1efe7;
+    
     --eyes: #5b8fa8;
     --eyes-light: #e3f0f7;
     --nose: #c97c5a;
     --nose-light: #faeee7;
     --asthma: #7a6fa0;
     --asthma-light: #ede9f6;
-    --level0: #e8e2d5;
-    --level1: #f0c96e;
-    --level2: #e8935a;
-    --level3: #c94a4a;
+    
+    --level0: #e2e4df;
+    --level1: #b8dfa3;
+    --level2: #e8b759;
+    --level3: #d16b54;
+    
     --nav-h: 68px;
   }
 
@@ -58,10 +62,6 @@
     overflow: hidden;
   }
 
-  #section-historique {
-    /* scrolls inside main-scroll */
-  }
-
   header {
     margin: 0 0 8px;
     flex-shrink: 0;
@@ -75,22 +75,26 @@
   }
 
   .logo h1 {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 28px;
+    font-family: 'DM Serif Display', serif; 
+    font-weight: 400; 
+    font-size: 32px;
     letter-spacing: -0.5px;
+    color: var(--accent);
   }
 
   .logo span {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 800;
-    font-size: 28px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 32px;
     letter-spacing: -0.5px;
-    color: var(--text);
+    color: var(--accent);
   }
 
   .date-today {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 18px;
+    font-family: 'DM Sans', sans-serif; 
+    font-weight: 500; 
+    letter-spacing: 0;
+    font-size: 16px;
     color: var(--text);
   }
 
@@ -139,10 +143,11 @@
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 10px 12px;
+    border-radius: 20px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03); /* Extremely subtle natural shadow */
   }
 
   .card-pollen .pollen-pills {
@@ -158,46 +163,48 @@
   }
 
   .card-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%; /* Fully round icons */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 15px;
     flex-shrink: 0;
+    background: var(--bg);
   }
 
   .card-eyes .card-icon,
   .card-nose .card-icon,
-  .card-asthma .card-icon { background: none; color: var(--text); }
-  .card-icon-pollen { color: var(--text); }
+  .card-asthma .card-icon { color: var(--accent); }
+  .card-icon-pollen { color: var(--accent); }
 
   .card-label {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 15px;
-    font-style: italic;
+    font-family: 'DM Serif Display', serif; 
+    font-weight: 400; 
+    font-size: 18px;
+    color: var(--text);
   }
 
   /* LEVEL SELECTOR */
   .level-selector {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
   }
 
   .lvl-btn {
     flex: 1;
-    height: 42px;
-    border-radius: 10px;
+    height: 48px;
+    border-radius: 24px; /* Pill shape */
     border: 1.5px solid var(--border);
-    background: var(--bg);
+    background: var(--surface);
     cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
     font-family: 'DM Sans', sans-serif;
     color: var(--muted);
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -206,12 +213,12 @@
     gap: 2px;
   }
 
-  .lvl-btn:hover { border-color: var(--accent); }
+  .lvl-btn:hover { border-color: var(--accent); color: var(--accent); }
   .lvl-btn.active-0 { background: var(--level0); border-color: var(--level0); color: var(--text); }
-  .lvl-btn.active-1 { background: var(--level1); border-color: var(--level1); color: #5a3e00; }
-  .lvl-btn.active-2 { background: var(--level2); border-color: var(--level2); color: #fff; }
-  .lvl-btn.active-3 { background: var(--level3); border-color: var(--level3); color: #fff; }
-  .lvl-label { font-size: 9px; font-weight: 400; opacity: 0.8; }
+  .lvl-btn.active-1 { background: var(--level1); border-color: var(--level1); color: var(--accent); font-weight: 600; }
+  .lvl-btn.active-2 { background: var(--level2); border-color: var(--level2); color: #fff; font-weight: 600; }
+  .lvl-btn.active-3 { background: var(--level3); border-color: var(--level3); color: #fff; font-weight: 600; }
+  .lvl-label { font-size: 10px; font-weight: 400; opacity: 0.9; }
 
   /* VENTOLINE */
   .ventoline-row {
@@ -273,10 +280,11 @@
   /* HISTORIQUE */
   .period-selector {
     display: flex;
-    gap: 2px;
-    background: var(--border);
-    border-radius: 20px;
-    padding: 3px;
+    gap: 4px;
+    background: var(--bg);
+    border-radius: 999px; /* Pill */
+    padding: 4px;
+    border: 1px solid var(--border);
   }
 
   .chart-footer {
@@ -287,8 +295,8 @@
   }
 
   .period-btn {
-    padding: 5px 12px;
-    border-radius: 20px;
+    padding: 6px 16px;
+    border-radius: 999px; /* Pill */
     border: none;
     background: transparent;
     font-family: 'DM Sans', sans-serif;
@@ -296,15 +304,15 @@
     font-weight: 500;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s ease;
     white-space: nowrap;
   }
 
   .period-btn.active {
     background: var(--surface);
-    color: var(--text);
-    font-weight: 700;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    color: var(--accent);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(21, 41, 32, 0.05); /* Seed style smooth shadow */
   }
 
   .hist-controls {
@@ -318,39 +326,41 @@
 
   .hist-select {
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--text);
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px; /* Pill */
+    padding: 8px 16px;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    padding-right: 28px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c8070'/%3E%3C/svg%3E");
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23152920'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 10px center;
+    background-position: right 14px center;
     outline: none;
+    transition: all 0.2s ease;
   }
 
-  .hist-select:focus {
+  .hist-select:focus, .hist-select:hover {
     outline: none;
-    border-color: var(--border);
-    box-shadow: none;
+    border-color: var(--accent);
+    background-color: var(--surface);
   }
 
   /* CHART */
   .chart-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 16px 16px 16px;
+    border-radius: 24px;
+    padding: 20px;
     padding-top: 24px;
     max-width: 480px;
     margin: 0 auto 16px;
     overflow: visible;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
   }
 
   .chart-card canvas {
@@ -419,26 +429,33 @@
     margin: 0 auto 10px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px;
+    border-radius: 20px;
+    padding: 16px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(21, 41, 32, 0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .history-entry:active {
+    transform: scale(0.98);
   }
 
   .entry-date {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
     min-width: 80px;
   }
 
   .entry-date .entry-sub {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
     color: var(--muted);
     display: block;
+    margin-top: 2px;
   }
 
   .entry-badges {
@@ -492,13 +509,14 @@
 
   .empty-state {
     text-align: center;
-    padding: 32px;
+    padding: 40px 20px;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 15px;
     max-width: 480px;
     margin: 0 auto;
+    font-family: 'DM Serif Display', serif;
   }
-  .empty-state .big { font-size: 32px; display: block; margin-bottom: 8px; }
+  .empty-state .big { font-size: 36px; display: block; margin-bottom: 12px; opacity: 0.8; }
 
 
 
@@ -599,7 +617,7 @@
   .pollen-pills {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     width: 100%;
     overflow: hidden;
   }
@@ -607,38 +625,42 @@
   .pollen-pill {
     display: block;
     width: 100%;
-    padding: 6px 8px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 999px; /* Pill */
+    font-size: 12px;
+    font-weight: 500;
     white-space: nowrap;
     text-align: center;
     box-sizing: border-box;
+    transition: transform 0.15s ease;
   }
 
-  .pollen-pill.p0 { background: transparent; color: var(--muted); border-color: var(--border); }
-  .pollen-pill.p1 { background: #d4edaa; color: #3a6000; }
-  .pollen-pill.p2 { background: var(--level1); color: #5a3e00; }
-  .pollen-pill.p3 { background: var(--level2); color: #fff; }
-  .pollen-pill.p4 { background: var(--level3); color: #fff; }
+  .pollen-pill.p0 { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .pollen-pill.p1 { background: var(--level1); color: var(--accent); }
+  .pollen-pill.p2 { background: var(--level2); color: #fff; }
+  .pollen-pill.p3 { background: var(--level3); color: #fff; }
+  .pollen-pill.p4 { background: #ab4430; color: #fff; }
 
   /* POLLEN DETAIL */
   .pollen-group-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
+    border-radius: 20px;
+    padding: 20px;
     max-width: 480px;
-    margin: 0 auto 10px;
+    margin: 0 auto 12px;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
   }
 
   .pollen-group-title {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 15px;
-    font-style: italic;
+    font-family: 'DM Serif Display', serif; 
+    font-weight: 400; 
+    font-size: 20px;
+    color: var(--accent);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 8px;
   }
 
   .pollen-detail-row {
@@ -713,8 +735,8 @@
   }
 
   /* SYMPTOM CARD DISPLAY */
-  .sym-card { transition: opacity 0.1s; }
-  .sym-card:active { opacity: 0.75; }
+  .sym-card { transition: opacity 0.2s ease, transform 0.2s ease; }
+  .sym-card:active { opacity: 0.8; transform: scale(0.98); }
 
   .sym-value-display {
     display: flex;
@@ -723,6 +745,7 @@
     justify-content: center;
     flex: 1;
     min-height: 0;
+    margin: 8px 0;
   }
 
   .sym-big-val {
@@ -730,18 +753,18 @@
   }
 
   .sym-big-label {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 22px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 26px;
     color: var(--text);
-    letter-spacing: -0.3px;
-    line-height: 1;
+    letter-spacing: 0;
+    line-height: 1.1;
   }
 
   .sym-val-0 .sym-big-val, .sym-val-0 .sym-big-label { color: var(--muted); }
-  .sym-val-1 .sym-big-val, .sym-val-1 .sym-big-label { color: #b07e00; }
-  .sym-val-2 .sym-big-val, .sym-val-2 .sym-big-label { color: #c96030; }
-  .sym-val-3 .sym-big-val, .sym-val-3 .sym-big-label { color: var(--level3); }
+  .sym-val-1 .sym-big-val, .sym-val-1 .sym-big-label { color: var(--accent); }
+  .sym-val-2 .sym-big-val, .sym-val-2 .sym-big-label { color: var(--level2); }
+  .sym-val-3 .sym-big-val, .sym-val-3 .sym-big-label { color: #d16b54; }
 
   /* SYMPTOM SHEET OPTIONS */
   .sym-sheet-options {
@@ -754,29 +777,29 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    background: var(--bg);
+    padding: 16px 20px;
+    border-radius: 999px; /* Pill format */
+    border: 1px solid var(--border);
+    background: var(--surface);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s ease;
   }
 
-  .sym-opt-left { display: flex; align-items: baseline; gap: 10px; }
-  .sym-opt-num { font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1; }
-  .sym-opt-lbl { font-size: 13px; font-weight: 500; color: var(--muted); }
-  .sym-opt-check { font-size: 16px; opacity: 0; }
+  .sym-opt-left { display: flex; align-items: baseline; gap: 12px; }
+  .sym-opt-num { font-family: 'DM Serif Display', serif; font-size: 24px; line-height: 1; color: var(--accent); }
+  .sym-opt-lbl { font-size: 14px; font-weight: 500; color: var(--text); }
+  .sym-opt-check { font-size: 18px; opacity: 0; color: inherit; }
 
   .sym-opt.active { border-color: currentColor; }
   .sym-opt.active .sym-opt-check { opacity: 1; }
 
-  .sym-opt-0.active { background: var(--level0); border-color: var(--border); color: var(--text); }
-  .sym-opt-1.active { background: var(--level1); border-color: var(--level1); color: #5a3e00; }
+  .sym-opt-0.active { background: var(--level0); border-color: var(--level0); color: var(--text); }
+  .sym-opt-1.active { background: var(--level1); border-color: var(--level1); color: var(--accent); }
+  .sym-opt-1.active .sym-opt-num, .sym-opt-1.active .sym-opt-lbl { color: var(--accent); }
   .sym-opt-2.active { background: var(--level2); border-color: var(--level2); color: #fff; }
+  .sym-opt-2.active .sym-opt-num, .sym-opt-2.active .sym-opt-lbl { color: #fff; }
   .sym-opt-3.active { background: var(--level3); border-color: var(--level3); color: #fff; }
-  .sym-opt-3.active .sym-opt-lbl { color: rgba(255,255,255,0.8); }
-  .sym-opt-2.active .sym-opt-lbl { color: rgba(255,255,255,0.8); }
-  .sym-opt-1.active .sym-opt-lbl { color: #7a5800; }
+  .sym-opt-3.active .sym-opt-num, .sym-opt-3.active .sym-opt-lbl { color: #fff; }
 
   /* LEVEL TEXT COLORS (list + summary) */
   .lv-color-0 { color: var(--muted); }
@@ -851,30 +874,34 @@
     <div class="grid-row">
       <!-- Yeux -->
       <div class="card card-eyes sym-card" onclick="openSymSheet('eyes')" style="cursor:pointer;">
-        <div class="card-header">
-          <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
-          <div class="card-label">Yeux</div>
+        <div class="card-header" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div class="card-label">Yeux</div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="sym-value-display" id="disp-eyes">
           <span class="sym-big-val" id="val-eyes">0</span>
           <div style="display:inline-flex;align-items:center;gap:4px;">
             <span class="sym-big-label" id="lbl-eyes">Aucun</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
         </div>
       </div>
 
       <!-- Nez -->
       <div class="card card-nose sym-card" onclick="openSymSheet('nose')" style="cursor:pointer;">
-        <div class="card-header">
-          <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg></div>
-          <div class="card-label">Nez</div>
+        <div class="card-header" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg></div>
+            <div class="card-label">Nez</div>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div class="sym-value-display" id="disp-nose">
           <span class="sym-big-val" id="val-nose">0</span>
           <div style="display:inline-flex;align-items:center;gap:4px;">
             <span class="sym-big-label" id="lbl-nose">Aucun</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
         </div>
       </div>
@@ -882,15 +909,17 @@
 
     <!-- Asthme — pleine largeur -->
     <div class="card card-asthma sym-card" onclick="openSymSheet('asthma')" style="cursor:pointer;">
-      <div class="card-header">
-        <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
-        <div class="card-label">Asthme</div>
+      <div class="card-header" style="justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
+          <div class="card-label">Asthme</div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="sym-value-display" id="disp-asthma">
         <span class="sym-big-val" id="val-asthma">0</span>
         <div style="display:inline-flex;align-items:center;gap:4px;">
           <span class="sym-big-label" id="lbl-asthma">Aucun</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.3;flex-shrink:0;"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </div>
       <div class="ventoline-row">
@@ -944,7 +973,7 @@
 <!-- SECTION HISTORIQUE -->
 <div id="section-historique" style="display:none;padding-top:12px;">
 
-  <h2 style="font-family:'DM Sans',sans-serif;font-weight:800;font-size:28px;letter-spacing:-0.5px;margin-bottom:14px;">Historique</h2>
+  <h2 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:32px;letter-spacing:0;margin-bottom:16px;color:var(--accent);">Historique</h2>
 
   <div class="view-toggle">
     <button class="view-btn active" id="vBtnGraph" onclick="setView('graph')">Graphique</button>
@@ -992,22 +1021,22 @@
 </div><!-- end main-scroll -->
 
 <!-- SYMPTOM SHEET -->
-<div id="symSheet" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.35);align-items:flex-end;">
-  <div id="symSheetInner" style="background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px 48px;width:100%;max-width:480px;margin:0 auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
-      <span id="symSheetTitle" style="font-family:'DM Serif Display',serif;font-size:18px;font-style:italic;"></span>
-      <button onclick="closeSymSheet()" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1;">×</button>
+<div id="symSheet" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(21, 41, 32, 0.4);align-items:flex-end;">
+  <div id="symSheetInner" style="background:var(--bg);border-radius:24px 24px 0 0;padding:24px 20px 48px;width:100%;max-width:480px;margin:0 auto;box-shadow: 0 -4px 24px rgba(21,41,32,0.1);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <span id="symSheetTitle" style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--accent);"></span>
+      <button onclick="closeSymSheet()" style="background:var(--surface);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text);cursor:pointer;line-height:1;transition:all 0.2s ease;">×</button>
     </div>
     <div class="sym-sheet-options" id="symSheetOptions"></div>
   </div>
 </div>
 
 <!-- EDIT MODAL -->
-<div id="editModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.4);align-items:flex-end;">
-  <div style="background:var(--surface);border-radius:20px 20px 0 0;padding:24px 16px 40px;width:100%;max-width:480px;margin:0 auto;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <span id="editModalDate" style="font-family:'DM Serif Display',serif;font-size:18px;font-style:italic;"></span>
-      <button onclick="closeEditModal()" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1;">×</button>
+<div id="editModal" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(21, 41, 32, 0.4);align-items:flex-end;">
+  <div style="background:var(--bg);border-radius:24px 24px 0 0;padding:24px 20px 48px;width:100%;max-width:480px;margin:0 auto;box-shadow: 0 -4px 24px rgba(21,41,32,0.1);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <span id="editModalDate" style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--accent);"></span>
+      <button onclick="closeEditModal()" style="background:var(--surface);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--text);cursor:pointer;line-height:1;transition:all 0.2s ease;">×</button>
     </div>
     <div class="edit-row">
       <span class="edit-label">Yeux</span>
@@ -1036,7 +1065,7 @@
         <button class="lvl-btn" onclick="setEditLevel('asthma',3)" data-val="3">3<span class="lvl-label">Fort</span></button>
       </div>
     </div>
-    <button onclick="saveEditEntry()" style="width:100%;margin-top:20px;padding:14px;background:var(--text);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Enregistrer</button>
+    <button onclick="saveEditEntry()" style="width:100%;margin-top:24px;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:transform 0.15s ease;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">Enregistrer</button>
   </div>
 </div>
 
@@ -1054,918 +1083,6 @@
 
 <div id="toast">✓ Enregistré</div>
 
-<script>
-  const SHEET_ID = '1MSWm8BwZN2MKZeMU8G9DbqqDB1ElKXw81RX5LHnxm4g';
-  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=Sheet1';
-  const STORAGE_KEY = 'pollen_entries';
-  const WEBHOOK_WRITE = 'https://hook.eu1.make.com/hgc97i068czunw748dv3ayf9fc0snbm9';
-  let levels = { eyes: 0, nose: 0, asthma: 0, ventoline: 0 };
-  let currentPeriod = 'jour';
-  let currentFilter = 'eyes';
-  let chartInstance = null;
-
-  function getData() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-    catch { return {}; }
-  }
-
-  function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
-
-  function todayKey() {
-    const d = new Date();
-    return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + d.getFullYear();
-  }
-
-  var SYM_LABELS = ['Aucun','Léger','Moyen','Fort'];
-
-  function setLevel(sym, val) {
-    levels[sym] = val;
-    updateSymDisplay(sym, val);
-    saveToday();
-  }
-
-  function updateSymDisplay(sym, val) {
-    var dispEl = document.getElementById('disp-' + sym);
-    var valEl  = document.getElementById('val-' + sym);
-    var lblEl  = document.getElementById('lbl-' + sym);
-    if (!valEl) return;
-    valEl.textContent = val;
-    lblEl.textContent = SYM_LABELS[val];
-    dispEl.className = 'sym-value-display sym-val-' + val;
-  }
-
-  var currentSym = null;
-
-  function openSymSheet(sym) {
-    currentSym = sym;
-    var titles = { eyes: 'Yeux', nose: 'Nez', asthma: 'Asthme' };
-    document.getElementById('symSheetTitle').textContent = titles[sym];
-    var opts = document.getElementById('symSheetOptions');
-    opts.innerHTML = '';
-    [0,1,2,3].forEach(function(v) {
-      var btn = document.createElement('div');
-      btn.className = 'sym-opt sym-opt-' + v + (levels[sym] === v ? ' active' : '');
-      btn.innerHTML = '<div class="sym-opt-left"><span class="sym-opt-num">' + v + '</span><span class="sym-opt-lbl">' + SYM_LABELS[v] + '</span></div><span class="sym-opt-check">✓</span>';
-      btn.addEventListener('click', function() {
-        setLevel(sym, v);
-        closeSymSheet();
-      });
-      opts.appendChild(btn);
-    });
-    var sheet = document.getElementById('symSheet');
-    sheet.style.display = 'flex';
-  }
-
-  function closeSymSheet() {
-    document.getElementById('symSheet').style.display = 'none';
-    currentSym = null;
-  }
-
-  function changeVentoline(delta) {
-    levels.ventoline = Math.max(0, levels.ventoline + delta);
-    document.getElementById('ventCount').textContent = levels.ventoline;
-    saveToday();
-  }
-
-  async function saveToday() {
-    const key = todayKey();
-    const data = getData();
-    data[key] = { eyes: levels.eyes, nose: levels.nose, asthma: levels.asthma, ventoline: levels.ventoline, ts: Date.now() };
-    saveData(data);
-    try {
-      await fetch(WEBHOOK_WRITE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: key, yeux: levels.eyes, nez: levels.nose, asthme: levels.asthma, ventoline: levels.ventoline })
-      });
-      showToast('✓ Enregistré');
-    } catch(e) {
-      showToast('⚠️ Local seulement');
-    }
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(function() { t.classList.remove('show'); }, 2000);
-  }
-
-  function showSection(s) {
-    // Reset historique view to graph when leaving it
-    if (s !== 'historique') {
-      document.getElementById('viewGraph').style.display = '';
-      document.getElementById('viewList').style.display = 'none';
-      document.getElementById('vBtnGraph').classList.add('active');
-      document.getElementById('vBtnList').classList.remove('active');
-      currentView = 'graph';
-    }
-    document.getElementById('section-saisie').style.display = s === 'saisie' ? '' : 'none';
-    document.getElementById('section-historique').style.display = s === 'historique' ? '' : 'none';
-    document.getElementById('section-pollen').style.display = s === 'pollen' ? '' : 'none';
-    document.querySelector('.logo').style.display = (s === 'pollen' || s === 'historique') ? 'none' : '';
-    document.getElementById('backBtn').style.display = 'none';
-    document.getElementById('nav-saisie').classList.toggle('active', s === 'saisie');
-    document.getElementById('nav-historique').classList.toggle('active', s === 'historique');
-    if (s === 'historique') renderHistory();
-  }
-
-  function pollenDayMax(arr) {
-    var vals = (arr || []).filter(function(v) { return v !== null && v !== undefined; });
-    if (vals.length === 0) return 0;
-    return Math.max.apply(null, vals);
-  }
-
-  function renderPollenDetail(hourly) {
-    var levelLabels = ['Nul','Faible','Modéré','Élevé','Très élevé'];
-    var levelClasses = ['p0','p1','p2','p3','p4'];
-    var isNow = currentPollenView === 'now';
-    var hour = new Date().getHours();
-    var html = '';
-    POLLEN_GROUPS.forEach(function(group) {
-      var items = group.types.map(function(t) {
-        var val = isNow
-          ? Math.round((hourly[t.key] || [])[hour] || 0)
-          : Math.round(pollenDayMax(hourly[t.key]));
-        var lvl = pollenLevel(val);
-        return { label: t.label, level: lvl, value: val };
-      });
-      var maxLvl = items.reduce(function(m, it) { return it.level > m ? it.level : m; }, 0);
-      html += '<div class="pollen-group-card">';
-      html += '<div class="pollen-group-title"><span>' + group.label + '</span>';
-      html += '<span class="pollen-pill ' + levelClasses[maxLvl] + '" style="width:auto;display:inline-block;text-align:left;">' + levelLabels[maxLvl] + '</span>';
-      html += '</div>';
-      items.forEach(function(item) {
-        html += '<div class="pollen-detail-row">';
-        html += '<span class="pollen-detail-name">' + item.label + '</span>';
-        html += '<div style="display:flex;align-items:center;gap:8px;">';
-        html += '<span class="pollen-detail-val">' + item.value + ' gr/m³</span>';
-        html += '<span class="pollen-pill ' + levelClasses[item.level] + '" style="width:auto;display:inline-block;">' + levelLabels[item.level] + '</span>';
-        html += '</div></div>';
-      });
-      html += '</div>';
-    });
-    document.getElementById('pollenDetail').innerHTML = html;
-  }
-
-  function showPollenDetail() {
-    if (!lastHourlyData) return;
-    currentPollenView = homePollenView;
-    document.getElementById('pBtnNow').classList.toggle('active', homePollenView === 'now');
-    document.getElementById('pBtnDay').classList.toggle('active', homePollenView === 'day');
-    renderPollenDetail(lastHourlyData);
-    showSection('pollen');
-  }
-
-  var currentView = 'graph';
-  var currentPollenView = 'now';
-  var lastHourlyData = null;
-  var homePollenView = 'now';
-
-  function restoreHomePollenView() {
-    document.getElementById('homePBtnNow').classList.toggle('active', homePollenView === 'now');
-    document.getElementById('homePBtnDay').classList.toggle('active', homePollenView === 'day');
-    if (lastHourlyData) renderHomePollenPills(lastHourlyData);
-  }
-
-  function setHomePollenView(v) {
-    homePollenView = v;
-    document.getElementById('homePBtnNow').classList.toggle('active', v === 'now');
-    document.getElementById('homePBtnDay').classList.toggle('active', v === 'day');
-    if (lastHourlyData) renderHomePollenPills(lastHourlyData);
-  }
-
-  function renderHomePollenPills(hourly) {
-    var LEVEL_LABELS = ['Nul','Faible','Modéré','Élevé','Très élevé'];
-    var isNow = homePollenView === 'now';
-    var hour = new Date().getHours();
-    var html = '';
-    POLLEN_GROUPS.forEach(function(group) {
-      var maxLvl = 0, maxVal = 0;
-      group.types.forEach(function(t) {
-        var arr = hourly[t.key] || [];
-        var val = Math.round(isNow ? (arr[hour] || 0) : pollenDayMax(arr));
-        var lvl = pollenLevel(val);
-        if (lvl > maxLvl) maxLvl = lvl;
-        if (val > maxVal) maxVal = val;
-      });
-      html += '<div class="pollen-home-row p' + maxLvl + '"><span class="pollen-home-name">' + group.label + '</span><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:10px;color:var(--muted);font-weight:400;">' + maxVal + ' gr/m³</span><span class="pollen-home-badge">' + LEVEL_LABELS[maxLvl] + '</span></div></div>';
-    });
-    document.getElementById('pollenPills').innerHTML = html;
-  }
-
-  function setView(v) {
-    currentView = v;
-    document.getElementById('viewGraph').style.display = v === 'graph' ? '' : 'none';
-    document.getElementById('viewList').style.display = v === 'liste' ? '' : 'none';
-    document.getElementById('vBtnGraph').classList.toggle('active', v === 'graph');
-    document.getElementById('vBtnList').classList.toggle('active', v === 'liste');
-    if (v === 'liste') renderHistoryList();
-  }
-
-  var currentListPeriod = 'jour';
-
-  function setListPeriod(p) {
-    currentListPeriod = p;
-    ['Jour','Mois','Annee'].forEach(function(x) {
-      document.getElementById('lpb'+x).classList.remove('active');
-    });
-    document.getElementById('lpb' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
-    renderHistoryList();
-  }
-
-  function renderHistoryList() {
-    const data = getData();
-    const allKeys = Object.keys(data).filter(function(k){ return k.match(/\d{2}\/\d{2}\/\d{4}/); });
-    allKeys.sort(function(a,b){ return keyToDate(b)-keyToDate(a); });
-    const histList = document.getElementById('histList');
-    if (!histList) return;
-
-    var lvlLabels = ['Aucun','Léger','Moyen','Fort'];
-
-    if (currentListPeriod === 'jour') {
-      // Group by day — show all symptoms + ventoline
-      if (allKeys.length === 0) {
-        histList.innerHTML = '<div class="empty-state"><span class="big">🌱</span>Aucune donnée encore.</div>';
-        return;
-      }
-      histList.innerHTML = '';
-      allKeys.forEach(function(k) {
-        var e = data[k];
-        var isToday = k === todayKey();
-        var parts = k.split('/');
-        var d = keyToDate(k);
-        var label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' });
-        label = label.charAt(0).toUpperCase() + label.slice(1);
-        var el = document.createElement('div');
-        el.className = 'history-entry';
-        el.style.cursor = 'pointer';
-        (function(key){ el.addEventListener('click', function(){ openEditModal(key); }); })(k);
-        var lvColors = ['var(--muted)', '#b07e00', '#c96030', 'var(--level3)'];
-        var lvStyle = function(lv) {
-          return 'display:block;font-size:11px;font-weight:400;color:' + lvColors[lv||0] + ';';
-        };
-        var ventHtml = '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Ventoline</span><span style="display:block;font-size:11px;font-weight:400;color:var(--muted);">' + (e.ventoline||0) + '</span></div>';
-        el.innerHTML =
-          '<div class="entry-date">' + label + (isToday ? '<span class="entry-sub">Aujourd\'hui</span>' : '') + '</div>' +
-          '<div class="entry-badges">' +
-          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Yeux</span><span style="' + lvStyle(e.eyes) + '">' + lvlLabels[e.eyes||0] + '</span></div>' +
-          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Nez</span><span style="' + lvStyle(e.nose) + '">' + lvlLabels[e.nose||0] + '</span></div>' +
-          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Asthme</span><span style="' + lvStyle(e.asthma) + '">' + lvlLabels[e.asthma||0] + '</span></div>' +
-          ventHtml +
-          '</div>';
-        histList.appendChild(el);
-      });
-
-    } else {
-      // Group by month or year — count days with symptoms > 0
-      var groups = {};
-      allKeys.forEach(function(k) {
-        var parts = k.split('/');
-        var gKey = currentListPeriod === 'mois'
-          ? parts[2] + '-' + parts[1]
-          : parts[2];
-        if (!groups[gKey]) groups[gKey] = { entries: [], key: gKey };
-        groups[gKey].entries.push(Object.assign({}, data[k]));
-      });
-      var groupList = Object.values(groups).sort(function(a,b){ return b.key.localeCompare(a.key); });
-      if (groupList.length === 0) {
-        histList.innerHTML = '<div class="empty-state"><span class="big">🌱</span>Aucune donnée encore.</div>';
-        return;
-      }
-      histList.innerHTML = '';
-      groupList.forEach(function(g) {
-        var entries = g.entries;
-        var label;
-        if (currentListPeriod === 'mois') {
-          var parts = g.key.split('-');
-          var d = new Date(parts[0]+'-'+parts[1]+'-01T12:00:00');
-          label = d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-          label = label.charAt(0).toUpperCase() + label.slice(1);
-        } else {
-          label = g.key;
-        }
-        var daysEyes   = entries.filter(function(e){ return (e.eyes||0)>0; }).length;
-        var daysNose   = entries.filter(function(e){ return (e.nose||0)>0; }).length;
-        var daysAsthma = entries.filter(function(e){ return (e.asthma||0)>0; }).length;
-        var daysVent   = entries.filter(function(e){ return (e.ventoline||0)>0; }).length;
-        var total = entries.length;
-        var today = new Date();
-        today.setHours(0,0,0,0);
-        var daysInPeriod;
-        if (currentListPeriod === 'mois') {
-          var parts2 = g.key.split('-');
-          var y = parseInt(parts2[0]), m = parseInt(parts2[1]);
-          var firstDay = new Date(y, m-1, 1);
-          var lastDay = new Date(y, m, 0); // last day of month
-          lastDay.setHours(0,0,0,0);
-          if (lastDay <= today) {
-            daysInPeriod = lastDay.getDate(); // month fully elapsed
-          } else {
-            daysInPeriod = today.getDate(); // days elapsed so far this month
-          }
-        } else {
-          var y2 = parseInt(g.key);
-          var dec31 = new Date(y2, 11, 31);
-          dec31.setHours(0,0,0,0);
-          if (dec31 <= today) {
-            daysInPeriod = 365 + (((y2 % 4 === 0 && y2 % 100 !== 0) || y2 % 400 === 0) ? 1 : 0);
-          } else {
-            var jan1 = new Date(y2, 0, 1);
-            daysInPeriod = Math.round((today - jan1) / 86400000) + 1;
-          }
-        }
-        var bw = function(lbl, days) {
-          return '<div class="badge-wrap">' +
-            '<span style="font-size:11px;font-weight:600;color:var(--text);">' + lbl + '</span>' +
-            '<span style="display:block;font-size:11px;font-weight:400;color:var(--muted);">' + days + ' j</span>' +
-            '</div>';
-        };
-        var el = document.createElement('div');
-        el.className = 'history-entry';
-        el.innerHTML =
-          '<div class="entry-date">' + label + '<span class="entry-sub">' + total + ' / ' + daysInPeriod + ' jours</span></div>' +
-          '<div class="entry-badges">' +
-          bw('Yeux',   daysEyes) +
-          bw('Nez',    daysNose) +
-          bw('Asthme', daysAsthma) +
-          '<div class="badge-wrap"><span style="font-size:11px;font-weight:600;color:var(--text);">Ventoline</span><span style="display:block;font-size:11px;font-weight:400;color:var(--muted);">' + daysVent + ' j</span></div>' +
-          '</div>';
-        histList.appendChild(el);
-      });
-    }
-  }
-
-  function setPollenView(v) {
-    currentPollenView = v;
-    document.getElementById('pBtnNow').classList.toggle('active', v === 'now');
-    document.getElementById('pBtnDay').classList.toggle('active', v === 'day');
-    if (lastHourlyData) renderPollenDetail(lastHourlyData);
-  }
-
-  function setPeriod(p) {
-    currentPeriod = p;
-    ['Jour','Mois','Annee'].forEach(function(x) { document.getElementById('pb'+x).classList.remove('active'); });
-    document.getElementById('pb' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
-    renderHistory();
-  }
-
-  function setFilter(f) {
-    currentFilter = f;
-    var sel = document.getElementById('filterSelect');
-    if (sel) sel.value = f;
-    renderHistory();
-  }
-
-  function deleteEntry(key) {
-    const data = getData();
-    delete data[key];
-    saveData(data);
-    renderHistory();
-    showToast('🗑 Supprimé');
-  }
-
-  function badgeClass(v) { return 'badge lv' + v; }
-
-  function keyToDate(k) {
-    const parts = k.split('/');
-    if (parts.length !== 3) return new Date(0);
-    return new Date(parts[2] + '-' + parts[1] + '-' + parts[0] + 'T12:00:00');
-  }
-
-  function renderChart(labels, chartData) {
-    const canvas = document.getElementById('histChart');
-    const card = document.getElementById('chartCard');
-
-    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
-
-    if (labels.length === 0) { card.style.display = 'none'; return; }
-    card.style.display = '';
-
-    const ctx = canvas.getContext('2d');
-
-    // Fix canvas pixel ratio to ensure circles are not distorted
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
-
-    const grad = ctx.createLinearGradient(0, 0, 0, 260);
-
-    const colorMap = {
-      eyes:   { line: '#5b8fa8', g1: 'rgba(91,143,168,0.55)',  g2: 'rgba(91,143,168,0.15)' },
-      nose:   { line: '#c97c5a', g1: 'rgba(201,124,90,0.55)',  g2: 'rgba(201,124,90,0.15)' },
-      asthma: { line: '#7a6fa0', g1: 'rgba(122,111,160,0.55)', g2: 'rgba(122,111,160,0.15)' }
-    };
-    const c = colorMap[currentFilter] || colorMap.eyes;
-    grad.addColorStop(0, c.g1);
-    grad.addColorStop(1, c.g2);
-
-    const dataKey = currentFilter === 'nose' ? 'nose' : currentFilter === 'asthma' ? 'asthma' : 'eyes';
-    const labelMap = { eyes: 'Yeux', nose: 'Nez', asthma: 'Asthme' };
-    const ventData = chartData.ventoline || [];
-
-    // Custom plugin: draw purple dot on TOP of bars with ventoline > 0 (asthma view only)
-    const ventPlugin = {
-      id: 'ventDots',
-      afterDraw: function(chart) {
-        if (currentFilter !== 'asthma') return;
-        const canvas = chart.canvas;
-        // Draw on a fresh 2d context reset to CSS pixels
-        const ctx2 = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const r = 4;
-        ventData.forEach(function(val, i) {
-          if (!val) return;
-          const barMeta = chart.getDatasetMeta(0).data[i];
-          if (!barMeta) return;
-          const x = barMeta.x;
-          const topY = barMeta.y - r - 3;
-          ctx2.save();
-          ctx2.resetTransform();
-          ctx2.scale(dpr, dpr);
-          ctx2.beginPath();
-          ctx2.arc(x, topY, r, 0, Math.PI * 2);
-          ctx2.fillStyle = 'rgba(122,111,160,0.45)';
-          ctx2.fill();
-          ctx2.restore();
-        });
-      }
-    };
-
-    chartInstance = new Chart(canvas, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: labelMap[currentFilter],
-          data: chartData[dataKey],
-          backgroundColor: grad,
-          borderColor: c.line,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          hoverBackgroundColor: c.line
-        }]
-      },
-      plugins: [ventPlugin],
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { top: 6, bottom: 4, left: 4, right: 4 } },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: '#1a1714',
-            titleColor: '#fff',
-            bodyColor: '#fff',
-            padding: 10,
-            cornerRadius: 10,
-            displayColors: false,
-            callbacks: {
-              label: function(ctx) {
-                const lbls = ['Aucun','Léger','Moyen','Fort'];
-                var lines = [lbls[ctx.parsed.y] || ctx.parsed.y];
-                if (currentFilter === 'asthma') {
-                  var v = ventData[ctx.dataIndex] || 0;
-                  if (v > 0) lines.push('● ' + v + ' Ventoline');
-                }
-                return lines;
-              }
-            }
-          }
-        },
-        scales: {
-          y: {
-            min: 0,
-            max: 3.1,
-            ticks: {
-              stepSize: 1,
-              font: { family: 'DM Sans', size: 10 },
-              includeBounds: false,
-              callback: function(v) {
-                if (v === 0) return 'Aucun';
-                if (v === 1) return 'Léger';
-                if (v === 2) return 'Moyen';
-                if (v === 3) return 'Fort';
-                return '';
-              }
-            },
-            afterBuildTicks: function(axis) {
-              axis.ticks = [0,1,2,3].map(function(v){ return {value:v}; });
-            },
-            grid: { color: function(ctx) { return ctx.tick.value > 3 ? 'transparent' : 'rgba(232,226,213,0.6)'; } },
-            border: { display: false }
-          },
-          x: {
-            ticks: { font: { family: 'DM Sans', size: 9 }, maxRotation: 0, maxTicksLimit: 7 },
-            grid: { display: false },
-            border: { display: false }
-          }
-        }
-      }
-    });
-  }
-
-  function summaryColorClass(val) {
-    if (isNaN(val) || val === 0) return 'sum-lv0';
-    if (val < 1.5) return 'sum-lv1';
-    if (val < 2.5) return 'sum-lv2';
-    return 'sum-lv3';
-  }
-
-  function renderHistory() {
-    const data = getData();
-    const allKeys = Object.keys(data);
-
-    // Sort chronologically using proper date parsing
-    allKeys.sort(function(a, b) {
-      return keyToDate(b) - keyToDate(a);
-    });
-
-    // Build groups
-    const groups = {};
-    allKeys.forEach(function(k) {
-      const entry = data[k];
-      let gKey, gLabel;
-      const parts = k.split('/');
-      const day = parts[0], month = parts[1], year = parts[2];
-
-      if (!year) return; // skip malformed keys
-
-      if (currentPeriod === 'jour') {
-        gKey = k;
-        const d = keyToDate(k);
-        gLabel = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long' });
-        gLabel = gLabel.charAt(0).toUpperCase() + gLabel.slice(1);
-      } else if (currentPeriod === 'mois') {
-        gKey = year + '-' + month;
-        const d = new Date(year + '-' + month + '-01T12:00:00');
-        gLabel = d.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-        gLabel = gLabel.charAt(0).toUpperCase() + gLabel.slice(1);
-      } else {
-        gKey = year;
-        gLabel = year;
-      }
-
-      if (!groups[gKey]) groups[gKey] = { label: gLabel, entries: [], key: gKey };
-      groups[gKey].entries.push(Object.assign({}, entry, { dateKey: k }));
-    });
-
-    const groupList = Object.values(groups).sort(function(a, b) {
-      return b.key.localeCompare(a.key);
-    });
-
-    // Chart — chronological
-    const chartGroups = groupList.slice().reverse();
-    const chartLabels = chartGroups.map(function(g) {
-      // Short labels for chart
-      if (currentPeriod === 'jour') {
-        const parts = g.key.split('/');
-        return parts[0] + '/' + parts[1];
-      }
-      return g.label.substring(0, 8);
-    });
-
-    function getAvg(entries, sym) {
-      if (entries.length === 0) return 0;
-      return +(entries.reduce(function(s, e) { return s + (e[sym] || 0); }, 0) / entries.length).toFixed(1);
-    }
-
-    renderChart(chartLabels, {
-      eyes:      chartGroups.map(function(g) { return getAvg(g.entries, 'eyes'); }),
-      nose:      chartGroups.map(function(g) { return getAvg(g.entries, 'nose'); }),
-      asthma:    chartGroups.map(function(g) { return getAvg(g.entries, 'asthma'); }),
-      ventoline: chartGroups.map(function(g) { return g.entries.reduce(function(s,e){ return s+(e.ventoline||0); },0); })
-    });
-
-    // Summary stats
-    const totalDays = allKeys.length;
-    let sumAll = 0;
-    allKeys.forEach(function(k) {
-      const e = data[k];
-      let s = currentFilter === 'eyes' ? (e.eyes || 0) :
-               currentFilter === 'nose' ? (e.nose || 0) : (e.asthma || 0);
-      sumAll += s;
-    });
-    // Compute average and show level label
-    var lvlLabels = ['Aucun','Léger','Moyen','Fort'];
-    var lvlColors = ['var(--muted)','#b07e00','#c96030','var(--level3)'];
-    var avgVal = totalDays ? (sumAll / totalDays) : 0;
-    var avgRound = Math.round(avgVal);
-    var avgEl = document.getElementById('avgValue');
-    if (avgEl) {
-      avgEl.textContent = totalDays ? lvlLabels[avgRound] : '—';
-      avgEl.style.color = totalDays ? lvlColors[avgRound] : 'var(--muted)';
-    }
-
-    const histList = document.getElementById('histList');
-    if (histList && currentView === 'liste') renderHistoryList();
-  }
-
-
-  // POLLEN — helpers globaux
-  function pollenCurrentHour(arr) {
-    if (!arr || arr.length === 0) return 0;
-    var hour = new Date().getHours();
-    var val = arr[hour];
-    return (val === null || val === undefined) ? 0 : val;
-  }
-
-  function pollenLevel(val) {
-    if (val < 10) return 0;
-    if (val < 30) return 1;
-    if (val < 80) return 2;
-    if (val < 200) return 3;
-    return 4;
-  }
-
-  var POLLEN_GROUPS = [
-    {
-      label: 'Arbres',
-      types: [
-        { key: 'alder_pollen', label: 'Aulne' },
-        { key: 'birch_pollen', label: 'Bouleau' },
-        { key: 'olive_pollen', label: 'Olivier' }
-      ]
-    },
-    {
-      label: 'Graminées',
-      types: [
-        { key: 'grass_pollen', label: 'Graminées' }
-      ]
-    },
-    {
-      label: 'Herbacées',
-      types: [
-        { key: 'mugwort_pollen', label: 'Armoise' },
-        { key: 'ragweed_pollen', label: 'Ambroisie' }
-      ]
-    }
-  ];
-
-  // Mock data pour test local — remplacer par fetch API sur GitHub
-  var MOCK_HOURLY = {
-    alder_pollen:   [0,0,0,0,0,0,5,8,12,15,18,20,18,15,12,10,8,5,3,2,1,0,0,0],
-    birch_pollen:   [0,0,0,0,0,0,10,25,45,60,75,80,72,65,55,45,35,25,15,10,5,2,0,0],
-    grass_pollen:   [0,0,0,0,0,0,2,5,8,10,12,15,14,12,10,8,6,4,2,1,0,0,0,0],
-    mugwort_pollen: [0,0,0,0,0,0,0,2,3,4,5,5,4,3,3,2,2,1,0,0,0,0,0,0],
-    olive_pollen:   [0,0,0,0,0,0,0,0,1,2,3,3,2,2,1,1,0,0,0,0,0,0,0,0],
-    ragweed_pollen: [0,0,0,0,0,0,0,0,1,2,4,5,5,4,3,2,1,0,0,0,0,0,0,0]
-  };
-
-  function processPollen(hourly) {
-    lastHourlyData = hourly;
-    window.pollenGroupsData = POLLEN_GROUPS.map(function(group) {
-      var items = [];
-      var maxLvl = 0;
-      group.types.forEach(function(t) {
-        var val = Math.round(pollenCurrentHour(hourly[t.key]));
-        var lvl = pollenLevel(val);
-        items.push({ label: t.label, level: lvl, value: val });
-        if (lvl > maxLvl) maxLvl = lvl;
-      });
-      return { label: group.label, items: items, maxLevel: maxLvl };
-    });
-    renderHomePollenPills(hourly);
-    var now = new Date();
-    var hh = String(now.getHours()).padStart(2,'0');
-    var mm = String(now.getMinutes()).padStart(2,'0');
-    var cityName = localStorage.getItem('pollen_city_name') || 'Beaumont';
-    document.getElementById('pollenSub').textContent = cityName + ' · ' + hh + ':' + mm;
-    var cityDisplayName = document.getElementById('cityDisplayName');
-    if (cityDisplayName) cityDisplayName.textContent = cityName;
-  }
-
-  var searchTimer = null;
-
-  function closeCitySearch() {
-    // Small delay to let a city result click register first
-    setTimeout(function() {
-      document.getElementById('cityDisplay').style.display = 'inline-flex';
-      document.getElementById('citySearchWrap').style.display = 'none';
-      document.getElementById('cityResults').style.display = 'none';
-    }, 200);
-  }
-
-  function openCitySearch() {
-    document.getElementById('cityDisplay').style.display = 'none';
-    document.getElementById('citySearchWrap').style.display = 'block';
-    document.getElementById('cityInput').focus();
-  }
-
-  function onCityInput() {
-    clearTimeout(searchTimer);
-    var q = document.getElementById('cityInput').value.trim();
-    if (q.length < 2) {
-      document.getElementById('cityResults').style.display = 'none';
-      document.getElementById('cityResults').innerHTML = '';
-      return;
-    }
-    searchTimer = setTimeout(function() { searchCity(); }, 300);
-  }
-
-  async function searchCity() {
-    var q = document.getElementById('cityInput').value.trim();
-    if (!q) return;
-    var resultsEl = document.getElementById('cityResults');
-    resultsEl.style.display = '';
-    resultsEl.innerHTML = '<span style="font-size:12px;color:var(--muted);">Recherche…</span>';
-    try {
-      var res = await fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(q) + '&count=5&language=fr&format=json');
-      var json = await res.json();
-      if (!json.results || json.results.length === 0) {
-        resultsEl.innerHTML = '<span style="font-size:12px;color:var(--muted);font-style:italic;">Aucun résultat.</span>';
-        return;
-      }
-      resultsEl.innerHTML = '';
-      json.results.forEach(function(r) {
-        var label = r.name + (r.admin1 ? ', ' + r.admin1 : '') + (r.country_code !== 'FR' ? ' (' + r.country_code + ')' : '');
-        var btn = document.createElement('button');
-        btn.textContent = label;
-        btn.className = 'city-result-btn';
-        btn.addEventListener('click', function() { selectCity(r.name, r.latitude, r.longitude); });
-        resultsEl.appendChild(btn);
-      });
-    } catch(e) {
-      resultsEl.innerHTML = '<span style="font-size:12px;color:var(--muted);font-style:italic;">Erreur de recherche.</span>';
-    }
-  }
-
-  function selectCity(name, lat, lon) {
-    localStorage.setItem('pollen_city_name', name);
-    var cityDisplayName = document.getElementById('cityDisplayName');
-    if (cityDisplayName) cityDisplayName.textContent = name;
-    document.getElementById('cityDisplay').style.display = 'inline-flex';
-    document.getElementById('citySearchWrap').style.display = 'none';
-    document.getElementById('cityResults').style.display = 'none';
-    localStorage.setItem('pollen_lat', lat);
-    localStorage.setItem('pollen_lon', lon);
-    document.getElementById('cityResults').style.display = 'none';
-    document.getElementById('cityInput').value = '';
-    fetchPollen();
-  }
-
-  async function fetchPollen() {
-    try {
-      var lat = localStorage.getItem('pollen_lat') || '45.97';
-      var lon = localStorage.getItem('pollen_lon') || '6.08';
-      var url = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=' + lat + '&longitude=' + lon + '&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen&timezone=Europe%2FParis&forecast_days=1';
-      var res = await fetch(url);
-      var json = await res.json();
-      processPollen(json.hourly);
-    } catch(e) {
-      processPollen(MOCK_HOURLY);
-    }
-  }
-  fetchPollen();
-
-
-
-  // Init
-  const today = new Date();
-  const dateEl = document.getElementById('dateToday');
-  const dateStr = today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const dateStrCap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-  dateEl.innerHTML = '<span style="font-weight:800;">Journal symptômes</span><span style="font-weight:400;font-size:15px;color:var(--muted);">' + dateStrCap + '</span>';
-
-  var editKey = null;
-  var editLevels = { eyes: 0, nose: 0, asthma: 0 };
-
-  function openEditModal(key) {
-    editKey = key;
-    var data = getData();
-    var e = data[key];
-    if (!e) return;
-    editLevels = { eyes: e.eyes || 0, nose: e.nose || 0, asthma: e.asthma || 0 };
-
-    // Set date label
-    var parts = key.split('/');
-    var d = new Date(parts[2] + '-' + parts[1] + '-' + parts[0] + 'T12:00:00');
-    document.getElementById('editModalDate').textContent = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-
-    // Set button states
-    ['eyes','nose','asthma'].forEach(function(sym) {
-      var sel = document.getElementById('edit-sel-' + sym);
-      sel.querySelectorAll('.lvl-btn').forEach(function(btn) {
-        btn.className = 'lvl-btn';
-        if (parseInt(btn.dataset.val) === editLevels[sym]) btn.className = 'lvl-btn active-' + editLevels[sym];
-      });
-    });
-
-    var modal = document.getElementById('editModal');
-    modal.style.display = 'flex';
-  }
-
-  function closeEditModal() {
-    document.getElementById('editModal').style.display = 'none';
-    editKey = null;
-  }
-
-  function setEditLevel(sym, val) {
-    editLevels[sym] = val;
-    var sel = document.getElementById('edit-sel-' + sym);
-    sel.querySelectorAll('.lvl-btn').forEach(function(btn) {
-      btn.className = 'lvl-btn';
-      if (parseInt(btn.dataset.val) === val) btn.className = 'lvl-btn active-' + val;
-    });
-  }
-
-  function saveEditEntry() {
-    if (!editKey) return;
-    var data = getData();
-    if (!data[editKey]) return;
-    data[editKey].eyes = editLevels.eyes;
-    data[editKey].nose = editLevels.nose;
-    data[editKey].asthma = editLevels.asthma;
-    data[editKey].ts = Date.now();
-    saveData(data);
-    // refresh today display if editing today
-    if (editKey === todayKey()) {
-      levels.eyes = editLevels.eyes; levels.nose = editLevels.nose; levels.asthma = editLevels.asthma;
-      ['eyes','nose','asthma'].forEach(function(s) { updateSymDisplay(s, levels[s]); });
-    }
-    closeEditModal();
-    renderHistory();
-    showToast('✓ Modifié');
-  }
-
-  function deleteEditEntry() {
-    if (!editKey) return;
-    var data = getData();
-    delete data[editKey];
-    saveData(data);
-    closeEditModal();
-    renderHistory();
-    showToast('🗑 Supprimé');
-  }
-
-  async function syncFromSheet() {
-    try {
-      const res = await fetch(SHEET_URL);
-      if (!res.ok) throw new Error('fetch failed');
-      const csv = await res.text();
-
-      function parseCSVLine(line) {
-        const cols = [];
-        let cur = '', inQ = false;
-        for (let i = 0; i < line.length; i++) {
-          const ch = line[i];
-          if (ch === '"') { inQ = !inQ; }
-          else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-          else { cur += ch; }
-        }
-        cols.push(cur.trim());
-        return cols;
-      }
-
-      const lines = csv.trim().split('\n').slice(1); // skip header
-      const data = {};
-      lines.forEach(function(line) {
-        if (!line.trim()) return;
-        const cols = parseCSVLine(line);
-        const date = cols[0];
-        if (!date || !date.match(/\d{2}\/\d{2}\/\d{4}/)) return;
-        data[date] = {
-          eyes:      parseInt(cols[1]) || 0,
-          nose:      parseInt(cols[2]) || 0,
-          asthma:    parseInt(cols[3]) || 0,
-          ventoline: parseInt(cols[4]) || 0,
-          ts:        Date.now()
-        };
-      });
-      console.log('Sheet sync OK —', Object.keys(data).length, 'entrées:', Object.keys(data));
-      saveData(data);
-    } catch(e) {
-      console.warn('Sheet sync failed, using localStorage', e);
-    }
-  }
-
-  async function init() {
-    await syncFromSheet();
-    const existing = getData()[todayKey()];
-    if (existing) {
-      ['eyes','nose','asthma'].forEach(function(sym) {
-        if (existing[sym] !== undefined) {
-          levels[sym] = existing[sym];
-          updateSymDisplay(sym, existing[sym]);
-        }
-      });
-      if (existing.ventoline !== undefined) {
-        levels.ventoline = existing.ventoline;
-        document.getElementById('ventCount').textContent = levels.ventoline;
-      }
-    } else {
-      ['eyes','nose','asthma'].forEach(function(sym) { updateSymDisplay(sym, 0); });
-    }
-  }
-
-  init();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
