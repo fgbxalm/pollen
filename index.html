@@ -74,22 +74,26 @@
   }
 
   .logo h1 {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 28px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 32px;
     letter-spacing: -0.5px;
+    color: var(--accent);
   }
 
   .logo span {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 800;
-    font-size: 28px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 32px;
     letter-spacing: -0.5px;
-    color: var(--text);
+    color: var(--accent);
   }
 
   .date-today {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0;
+    font-size: 16px;
     color: var(--text);
   }
 
@@ -138,8 +142,9 @@
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 10px 12px;
+    border-radius: 20px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
     display: flex;
     flex-direction: column;
   }
@@ -157,9 +162,10 @@
   }
 
   .card-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -173,9 +179,10 @@
   .card-icon-pollen { color: var(--text); }
 
   .card-label {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 15px;
-    font-style: italic;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--text);
   }
 
   /* LEVEL SELECTOR */
@@ -187,8 +194,8 @@
 
   .lvl-btn {
     flex: 1;
-    height: 42px;
-    border-radius: 10px;
+    height: 48px;
+    border-radius: 24px;
     border: 1.5px solid var(--border);
     background: var(--bg);
     cursor: pointer;
@@ -257,7 +264,9 @@
   .vent-btn:hover { border-color: var(--asthma); color: var(--asthma); }
 
   .vent-count {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.5px;
     font-size: 18px;
     min-width: 22px;
     text-align: center;
@@ -344,8 +353,9 @@
   .chart-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 16px 16px 16px;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
     padding-top: 24px;
     max-width: 480px;
     margin: 0 auto 16px;
@@ -418,8 +428,10 @@
     margin: 0 auto 10px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px;
+    border-radius: 20px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(21, 41, 32, 0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: space-between;
