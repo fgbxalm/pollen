@@ -8,6 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
+    /* Seed.com Inspired Palette */
     --bg: #f5f4ef;
     --surface: #ffffff;
     --border: #d8d6ce;
@@ -15,18 +16,22 @@
     --muted: #6b7d73;
     --accent: #124429;
     --accent-light: #e1efe7;
+    
     --eyes: #5b8fa8;
     --eyes-light: #e3f0f7;
     --nose: #c97c5a;
     --nose-light: #faeee7;
     --asthma: #7a6fa0;
     --asthma-light: #ede9f6;
+    
     --level0: #e2e4df;
     --level1: #b8dfa3;
     --level2: #e8b759;
     --level3: #d16b54;
+    
     --nav-h: 68px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   body {
@@ -57,10 +62,6 @@
     overflow: hidden;
   }
 
-  #section-historique {
-    /* scrolls inside main-scroll */
-  }
-
   header {
     margin: 0 0 8px;
     flex-shrink: 0;
@@ -74,8 +75,8 @@
   }
 
   .logo h1 {
-    font-family: 'DM Serif Display', serif;
-    font-weight: 400;
+    font-family: 'DM Serif Display', serif; 
+    font-weight: 400; 
     font-size: 32px;
     letter-spacing: -0.5px;
     color: var(--accent);
@@ -90,8 +91,8 @@
   }
 
   .date-today {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
+    font-family: 'DM Sans', sans-serif; 
+    font-weight: 500; 
     letter-spacing: 0;
     font-size: 16px;
     color: var(--text);
@@ -144,9 +145,9 @@
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 14px 16px;
-    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03); /* Extremely subtle natural shadow */
   }
 
   .card-pollen .pollen-pills {
@@ -164,23 +165,23 @@
   .card-icon {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
-    background: var(--bg);
+    border-radius: 50%; /* Fully round icons */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 15px;
     flex-shrink: 0;
+    background: var(--bg);
   }
 
   .card-eyes .card-icon,
   .card-nose .card-icon,
-  .card-asthma .card-icon { background: none; color: var(--text); }
-  .card-icon-pollen { color: var(--text); }
+  .card-asthma .card-icon { color: var(--accent); }
+  .card-icon-pollen { color: var(--accent); }
 
   .card-label {
-    font-family: 'DM Serif Display', serif;
-    font-weight: 400;
+    font-family: 'DM Serif Display', serif; 
+    font-weight: 400; 
     font-size: 18px;
     color: var(--text);
   }
@@ -188,22 +189,22 @@
   /* LEVEL SELECTOR */
   .level-selector {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
   }
 
   .lvl-btn {
     flex: 1;
     height: 48px;
-    border-radius: 24px;
+    border-radius: 24px; /* Pill shape */
     border: 1.5px solid var(--border);
-    background: var(--bg);
+    background: var(--surface);
     cursor: pointer;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 500;
     font-family: 'DM Sans', sans-serif;
     color: var(--muted);
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -212,12 +213,12 @@
     gap: 2px;
   }
 
-  .lvl-btn:hover { border-color: var(--accent); }
+  .lvl-btn:hover { border-color: var(--accent); color: var(--accent); }
   .lvl-btn.active-0 { background: var(--level0); border-color: var(--level0); color: var(--text); }
-  .lvl-btn.active-1 { background: var(--level1); border-color: var(--level1); color: #5a3e00; }
-  .lvl-btn.active-2 { background: var(--level2); border-color: var(--level2); color: #fff; }
-  .lvl-btn.active-3 { background: var(--level3); border-color: var(--level3); color: #fff; }
-  .lvl-label { font-size: 9px; font-weight: 400; opacity: 0.8; }
+  .lvl-btn.active-1 { background: var(--level1); border-color: var(--level1); color: var(--accent); font-weight: 600; }
+  .lvl-btn.active-2 { background: var(--level2); border-color: var(--level2); color: #fff; font-weight: 600; }
+  .lvl-btn.active-3 { background: var(--level3); border-color: var(--level3); color: #fff; font-weight: 600; }
+  .lvl-label { font-size: 10px; font-weight: 400; opacity: 0.9; }
 
   /* VENTOLINE */
   .ventoline-row {
@@ -264,9 +265,7 @@
   .vent-btn:hover { border-color: var(--asthma); color: var(--asthma); }
 
   .vent-count {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
     font-size: 18px;
     min-width: 22px;
     text-align: center;
@@ -281,10 +280,11 @@
   /* HISTORIQUE */
   .period-selector {
     display: flex;
-    gap: 2px;
-    background: var(--border);
-    border-radius: 20px;
-    padding: 3px;
+    gap: 4px;
+    background: var(--bg);
+    border-radius: 999px; /* Pill */
+    padding: 4px;
+    border: 1px solid var(--border);
   }
 
   .chart-footer {
@@ -295,8 +295,8 @@
   }
 
   .period-btn {
-    padding: 5px 12px;
-    border-radius: 20px;
+    padding: 6px 16px;
+    border-radius: 999px; /* Pill */
     border: none;
     background: transparent;
     font-family: 'DM Sans', sans-serif;
@@ -304,15 +304,15 @@
     font-weight: 500;
     color: var(--muted);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s ease;
     white-space: nowrap;
   }
 
   .period-btn.active {
     background: var(--surface);
-    color: var(--text);
-    font-weight: 700;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    color: var(--accent);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(21, 41, 32, 0.05); /* Seed style smooth shadow */
   }
 
   .hist-controls {
@@ -326,27 +326,28 @@
 
   .hist-select {
     font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--text);
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px; /* Pill */
+    padding: 8px 16px;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
-    padding-right: 28px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c8070'/%3E%3C/svg%3E");
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23152920'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 10px center;
+    background-position: right 14px center;
     outline: none;
+    transition: all 0.2s ease;
   }
 
-  .hist-select:focus {
+  .hist-select:focus, .hist-select:hover {
     outline: none;
-    border-color: var(--border);
-    box-shadow: none;
+    border-color: var(--accent);
+    background-color: var(--surface);
   }
 
   /* CHART */
@@ -355,11 +356,11 @@
     border: 1px solid var(--border);
     border-radius: 24px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
     padding-top: 24px;
     max-width: 480px;
     margin: 0 auto 16px;
     overflow: visible;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
   }
 
   .chart-card canvas {
@@ -430,26 +431,31 @@
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 16px 20px;
-    box-shadow: 0 2px 8px rgba(21, 41, 32, 0.02);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(21, 41, 32, 0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .history-entry:active {
+    transform: scale(0.98);
   }
 
   .entry-date {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
     min-width: 80px;
   }
 
   .entry-date .entry-sub {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
     color: var(--muted);
     display: block;
+    margin-top: 2px;
   }
 
   .entry-badges {
@@ -503,15 +509,14 @@
 
   .empty-state {
     text-align: center;
-    padding: 32px;
+    padding: 40px 20px;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 15px;
     max-width: 480px;
     margin: 0 auto;
+    font-family: 'DM Serif Display', serif;
   }
-  .empty-state .big { font-size: 32px; display: block; margin-bottom: 8px; }
-
-
+  .empty-state .big { font-size: 36px; display: block; margin-bottom: 12px; opacity: 0.8; }
 
   /* GRID LAYOUT */
   .grid-saisie {
@@ -610,7 +615,7 @@
   .pollen-pills {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
     width: 100%;
     overflow: hidden;
   }
@@ -618,38 +623,42 @@
   .pollen-pill {
     display: block;
     width: 100%;
-    padding: 6px 8px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 999px; /* Pill */
+    font-size: 12px;
+    font-weight: 500;
     white-space: nowrap;
     text-align: center;
     box-sizing: border-box;
+    transition: transform 0.15s ease;
   }
 
-  .pollen-pill.p0 { background: transparent; color: var(--muted); border-color: var(--border); }
-  .pollen-pill.p1 { background: #d4edaa; color: #3a6000; }
-  .pollen-pill.p2 { background: var(--level1); color: #5a3e00; }
-  .pollen-pill.p3 { background: var(--level2); color: #fff; }
-  .pollen-pill.p4 { background: var(--level3); color: #fff; }
+  .pollen-pill.p0 { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+  .pollen-pill.p1 { background: var(--level1); color: var(--accent); }
+  .pollen-pill.p2 { background: var(--level2); color: #fff; }
+  .pollen-pill.p3 { background: var(--level3); color: #fff; }
+  .pollen-pill.p4 { background: #ab4430; color: #fff; }
 
   /* POLLEN DETAIL */
   .pollen-group-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px;
+    border-radius: 20px;
+    padding: 20px;
     max-width: 480px;
-    margin: 0 auto 10px;
+    margin: 0 auto 12px;
+    box-shadow: 0 4px 12px rgba(21, 41, 32, 0.03);
   }
 
   .pollen-group-title {
-    font-family: 'DM Sans', sans-serif; font-weight: 800; letter-spacing: -0.5px;
-    font-size: 15px;
-    font-style: italic;
+    font-family: 'DM Serif Display', serif; 
+    font-weight: 400; 
+    font-size: 20px;
+    color: var(--accent);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 8px;
   }
 
   .pollen-detail-row {
@@ -724,8 +733,8 @@
   }
 
   /* SYMPTOM CARD DISPLAY */
-  .sym-card { transition: opacity 0.1s; }
-  .sym-card:active { opacity: 0.75; }
+  .sym-card { transition: opacity 0.2s ease, transform 0.2s ease; }
+  .sym-card:active { opacity: 0.8; transform: scale(0.98); }
 
   .sym-value-display {
     display: flex;
@@ -734,6 +743,7 @@
     justify-content: center;
     flex: 1;
     min-height: 0;
+    margin: 8px 0;
   }
 
   .sym-big-val {
@@ -741,18 +751,18 @@
   }
 
   .sym-big-label {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 22px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 26px;
     color: var(--text);
-    letter-spacing: -0.3px;
-    line-height: 1;
+    letter-spacing: 0;
+    line-height: 1.1;
   }
 
   .sym-val-0 .sym-big-val, .sym-val-0 .sym-big-label { color: var(--muted); }
-  .sym-val-1 .sym-big-val, .sym-val-1 .sym-big-label { color: #b07e00; }
-  .sym-val-2 .sym-big-val, .sym-val-2 .sym-big-label { color: #c96030; }
-  .sym-val-3 .sym-big-val, .sym-val-3 .sym-big-label { color: var(--level3); }
+  .sym-val-1 .sym-big-val, .sym-val-1 .sym-big-label { color: var(--accent); }
+  .sym-val-2 .sym-big-val, .sym-val-2 .sym-big-label { color: var(--level2); }
+  .sym-val-3 .sym-big-val, .sym-val-3 .sym-big-label { color: #d16b54; }
 
   /* SYMPTOM SHEET OPTIONS */
   .sym-sheet-options {
@@ -765,29 +775,29 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    background: var(--bg);
+    padding: 16px 20px;
+    border-radius: 999px; /* Pill format */
+    border: 1px solid var(--border);
+    background: var(--surface);
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s ease;
   }
 
-  .sym-opt-left { display: flex; align-items: baseline; gap: 10px; }
-  .sym-opt-num { font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1; }
-  .sym-opt-lbl { font-size: 13px; font-weight: 500; color: var(--muted); }
-  .sym-opt-check { font-size: 16px; opacity: 0; }
+  .sym-opt-left { display: flex; align-items: baseline; gap: 12px; }
+  .sym-opt-num { font-family: 'DM Serif Display', serif; font-size: 24px; line-height: 1; color: var(--accent); }
+  .sym-opt-lbl { font-size: 14px; font-weight: 500; color: var(--text); }
+  .sym-opt-check { font-size: 18px; opacity: 0; color: inherit; }
 
   .sym-opt.active { border-color: currentColor; }
   .sym-opt.active .sym-opt-check { opacity: 1; }
 
-  .sym-opt-0.active { background: var(--level0); border-color: var(--border); color: var(--text); }
-  .sym-opt-1.active { background: var(--level1); border-color: var(--level1); color: #5a3e00; }
+  .sym-opt-0.active { background: var(--level0); border-color: var(--level0); color: var(--text); }
+  .sym-opt-1.active { background: var(--level1); border-color: var(--level1); color: var(--accent); }
+  .sym-opt-1.active .sym-opt-num, .sym-opt-1.active .sym-opt-lbl { color: var(--accent); }
   .sym-opt-2.active { background: var(--level2); border-color: var(--level2); color: #fff; }
+  .sym-opt-2.active .sym-opt-num, .sym-opt-2.active .sym-opt-lbl { color: #fff; }
   .sym-opt-3.active { background: var(--level3); border-color: var(--level3); color: #fff; }
-  .sym-opt-3.active .sym-opt-lbl { color: rgba(255,255,255,0.8); }
-  .sym-opt-2.active .sym-opt-lbl { color: rgba(255,255,255,0.8); }
-  .sym-opt-1.active .sym-opt-lbl { color: #7a5800; }
+  .sym-opt-3.active .sym-opt-num, .sym-opt-3.active .sym-opt-lbl { color: #fff; }
 
   /* LEVEL TEXT COLORS (list + summary) */
   .lv-color-0 { color: var(--muted); }
